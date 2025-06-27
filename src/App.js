@@ -8,7 +8,9 @@ import Place from './pages/Place'
 import ClassReservation from './pages/ClassReservation'
 import Rental from './pages/Rental'
 import Announcement from './pages/Announcement'
-import Mypage from './pages/Mypage'
+import Classes from './pages/Mypage/Classes'
+import Profile from './pages/Mypage/Profile/Profile'
+import Rentals from './pages/Mypage/Rentals'
 
 const App = () => {
   return (
@@ -21,7 +23,9 @@ const App = () => {
         <Route path='/classReservation' element={<ClassReservation/>} />
         <Route path='/rental' element={<Rental/>} />
         <Route path='/announcement' element={<Announcement/>} />
-        <Route path='/mypage' element={<Mypage/>} />
+        <Route path='/mypage/classes' element={<Classes/>} />
+        <Route path='/mypage/profile' element={<Profile/>} />
+        <Route path='/mypage/rentals' element={<Rentals/>} />
       </Routes>
     </BrowserRouter>
   )
