@@ -11,6 +11,9 @@ import Announcement from './pages/Announcement'
 import Classes from './pages/Mypage/Classes'
 import Profile from './pages/Mypage/Profile/Profile'
 import Rentals from './pages/Mypage/Rentals'
+import ChangePassword from './pages/Mypage/Profile/ChangePassword'
+import ChangePhoneNumber from './pages/Mypage/Profile/ChangePhoneNumber'
+import WithdrawAccount from './pages/Mypage/Profile/WithdrawAccount'
 
 const App = () => {
   return (
@@ -26,6 +29,9 @@ const App = () => {
         <Route path='/mypage/classes' element={<Classes/>} />
         <Route path='/mypage/profile' element={<Profile/>} />
         <Route path='/mypage/rentals' element={<Rentals/>} />
+        <Route path='/mypage/profile/password' element={<ChangePassword />} />
+        <Route path='/mypage/profile/phone' element={<ChangePhoneNumber />} />
+        <Route path='/mypage/profile/withdraw' element={<WithdrawAccount />} />
       </Routes>
     </BrowserRouter>
   )

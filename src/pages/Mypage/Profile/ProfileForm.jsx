@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './ProfileForm.module.css';
 
 const ProfileForm = () => {
   const [gender, setGender] = useState('남');
+  const navigate = useNavigate();
 
   return (
     <div className={styles.wrapper}>
@@ -35,7 +37,12 @@ const ProfileForm = () => {
       <div className={styles.field}>
         <div className={styles.labelRow}>
           <label className={styles.label}>비밀번호</label>
-          <button className={styles.editButton}>수정</button>
+          <button
+            className={styles.editButton}
+            onClick={() => navigate('/mypage/profile/password')}
+          >
+            수정
+          </button>
         </div>
         <input className={styles.input} type="password" />
       </div>
@@ -53,15 +60,24 @@ const ProfileForm = () => {
       <div className={styles.field}>
         <div className={styles.labelRow}>
           <label className={styles.label}>휴대폰 번호</label>
-          <button className={styles.editButton}>수정</button>
+          <button
+            className={styles.editButton}
+            onClick={() => navigate('/mypage/profile/phone')}
+          >
+            수정
+          </button>
         </div>
         <input className={styles.input} type="tel" />
       </div>
 
-      <div className={styles.withdraw}>탈퇴하기</div>
+      <div
+        className={styles.withdraw}
+        onClick={() => navigate('/mypage/profile/withdraw')}
+      >
+        탈퇴하기
+      </div>
     </div>
   );
 };
 
 export default ProfileForm;
-
