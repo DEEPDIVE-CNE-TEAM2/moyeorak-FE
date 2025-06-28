@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 
 import Navbar from '../../../components/Navbar/Navbar.jsx';
 import styles from './ChangePassword.module.css';
@@ -20,14 +20,21 @@ const ChangePassword = () => {
     }
 
     try {
-      // 비밀번호 변경 API 요청
+      // 실제 백엔드 연결 시
+      /*
       await axios.post('/api/change-password', {
         currentPassword,
         newPassword,
       });
+      */
 
-      alert('비밀번호가 성공적으로 변경되었습니다.');
-      navigate('/mypage/profile');
+      // 임시 성공 처리
+      console.log('가짜 비밀번호 변경 요청 실행됨');
+      setTimeout(() => {
+        alert('비밀번호가 성공적으로 변경되었습니다.');
+        navigate('/mypage/profile');
+      }, 500);
+
     } catch (error) {
       console.error(error);
       alert('비밀번호 변경에 실패했습니다.');
