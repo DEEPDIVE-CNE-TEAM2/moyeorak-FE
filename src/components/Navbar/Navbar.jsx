@@ -1,21 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './Navbar.module.css';
-import { CiLogin } from "react-icons/ci";
+import { CiLogin, CiLogout } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-const districts = ["송파구", "강남구", "용산구", "서초구", "마포구"];
+const districts = ["강남구", "용산구", "송파구"];
 
-const Navbar = () => {
-  const [selectedDistrict, setSelectedDistrict] = useState("송파구");
+const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPinned, setSubmenuPinned] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
   const handleSelect = (district) => {
-    setSelectedDistrict(district);
+    if(onDistrictChange) onDistrictChange(district);
     setDropdownOpen(false);
   };
 
@@ -42,7 +43,7 @@ const Navbar = () => {
                 size={18}
                 className={dropdownOpen ? styles.iconRotated : ''}
               />
-              <span>{selectedDistrict}</span>
+              <span>{selectedDistrict || "지역 선택"}</span>
             </button>
             {dropdownOpen && (
               <ul className={styles.dropdownList}>
@@ -68,18 +69,33 @@ const Navbar = () => {
             >
               <span className={styles.menuLink}>마이페이지</span>
             </li>
-
           </ul>
         </div>
 
         <div className={styles.authButtons}>
-          <Link to="/login" className={styles.authLink}>
-            <CiLogin size={20} /> 로그인
-          </Link>
-          <div className={styles.divider}></div>
-          <Link to="/joinMembership" className={styles.authLink}>
-            <FaUserPlus size={18} /> 회원가입
-          </Link>
+          {!isLoggedIn ? (
+            <>
+              <Link to="/login" className={styles.authLink}>
+                <CiLogin size={20} /> 로그인
+              </Link>
+              <div className={styles.divider}></div>
+              <Link to="/joinMembership" className={styles.authLink}>
+                <FaUserPlus size={18} /> 회원가입
+              </Link>
+            </>
+          ) : (
+            <button
+              className={styles.authLink}
+              onClick={() => {
+                if (onLogout) onLogout();
+                else navigate("/login");
+              }}
+              type="button"
+            >
+              <CiLogout size={20} />
+              로그아웃
+            </button>
+          )}
         </div>
       </nav>
 

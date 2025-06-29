@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import './PopupModal.css';
 
-const PopupModal = () => {
+const PopupModal = ({ onConfirm }) => {
   const [selected, setSelected] = useState('');
 
   const handleChange = (e) => {
     setSelected(e.target.value);
+  };
+
+  const handleConfirm = () => {
+    if (selected) {
+      onConfirm(selected);
+    }
   };
 
   return (
@@ -22,11 +28,15 @@ const PopupModal = () => {
           </div>
         </div>
 
-        <select className="popup-dropdown" value={selected} onChange={handleChange}>
+        <select
+          className="popup-dropdown"
+          value={selected}
+          onChange={handleChange}
+        >
           <option value="">지역을 선택하세요</option>
           <option value="강남구">강남구</option>
-          <option value="강서구">강서구</option>
-          <option value="강북구">강북구</option>
+          <option value="용산구">용산구</option>
+          <option value="송파구">송파구</option>
         </select>
 
         {selected && (
@@ -34,7 +44,9 @@ const PopupModal = () => {
             <div className="popup-text-line4">
               {selected}의 체육시설을 이용하시겠습니까?
             </div>
-            <button className="popup-confirm-button">확인</button>
+            <button className="popup-confirm-button" onClick={handleConfirm}>
+              확인
+            </button>
           </>
         )}
       </div>
@@ -43,5 +55,3 @@ const PopupModal = () => {
 };
 
 export default PopupModal;
-
-

@@ -14,6 +14,9 @@ import Rentals from './pages/Mypage/Rentals'
 import ChangePassword from './pages/Mypage/Profile/ChangePassword'
 import ChangePhoneNumber from './pages/Mypage/Profile/ChangePhoneNumber'
 import WithdrawAccount from './pages/Mypage/Profile/WithdrawAccount'
+import Gangnam from './pages/Area/Gangnam';
+import Songpa from './pages/Area/Songpa';
+import Yongsan from './pages/Area/Yongsan';
 
 const App = () => {
   return (
@@ -32,6 +35,9 @@ const App = () => {
         <Route path='/mypage/profile/password' element={<ChangePassword />} />
         <Route path='/mypage/profile/phone' element={<ChangePhoneNumber />} />
         <Route path='/mypage/profile/withdraw' element={<WithdrawAccount />} />
+        <Route path='/gangnam' element={<Gangnam />} />
+        <Route path='/songpa' element={<Songpa />} />
+        <Route path='/yongsan' element={<Yongsan />} />
       </Routes>
     </BrowserRouter>
   )
