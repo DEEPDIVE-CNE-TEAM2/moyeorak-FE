@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar/Navbar.jsx';
+import PopupModal2 from '../../../components/Popupmodal2/PopupModal2.jsx';
 import styles from './Userform.module.css';
 
 const WithdrawAccount = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = () => {
     if (currentPassword !== confirmPassword) {
@@ -14,8 +14,7 @@ const WithdrawAccount = () => {
       return;
     }
 
-    alert('탈퇴 처리가 완료되었습니다.');
-    navigate('/');
+    setShowModal(true);
   };
 
   return (
@@ -39,7 +38,7 @@ const WithdrawAccount = () => {
           />
         </div>
 
-        {/* 새 비밀번호 확인 */}
+        {/* 비밀번호 확인 */}
         <div className={styles.field}>
           <label className={styles.label}>비밀번호 확인</label>
           <input
@@ -50,13 +49,24 @@ const WithdrawAccount = () => {
           />
         </div>
 
-        {/* 버튼 */}
+        {/* 확인 버튼 */}
         <button className={styles.submitButton} onClick={handleSubmit}>
           확인
         </button>
       </div>
+
+      {/* 팝업 모달 */}
+      {showModal && (
+        <PopupModal2
+          title="회원탈퇴"
+          content="회원 탈퇴하시겠습니까?"
+          redirectPath="/"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </>
   );
 };
 
 export default WithdrawAccount;
+
