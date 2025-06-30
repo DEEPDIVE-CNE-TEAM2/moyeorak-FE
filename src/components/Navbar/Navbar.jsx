@@ -26,6 +26,7 @@ const Navbar = ({
     setDropdownOpen(false);
   };
 
+  // 방어적으로 접근 (districtToPath가 undefined일 수도 있으니)
   const selectedPath = (districtToPath && districtToPath[selectedDistrict]) || '';
 
   return (
@@ -102,9 +103,7 @@ const Navbar = ({
               onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
               onClick={() => setSubmenuPinned(!submenuPinned)}
             >
-              <span className={`${styles.menuLink} ${location.pathname.startsWith("/mypage") ? styles.activeMenu : ''}`}>
-                마이페이지
-              </span>
+              <span className={styles.menuLink}>마이페이지</span>
             </li>
           </ul>
         </div>
@@ -142,24 +141,9 @@ const Navbar = ({
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-          <Link
-            to="/mypage/profile"
-            className={`${styles.submenuLink} ${location.pathname === "/mypage/profile" ? styles.activeMenu : ''}`}
-          >
-            회원정보수정
-          </Link>
-          <Link
-            to="/mypage/classes"
-            className={`${styles.submenuLink} ${location.pathname === "/mypage/classes" ? styles.activeMenu : ''}`}
-          >
-            수강신청내역
-          </Link>
-          <Link
-            to="/mypage/rentals"
-            className={`${styles.submenuLink} ${location.pathname === "/mypage/rentals" ? styles.activeMenu : ''}`}
-          >
-            대관신청내역
-          </Link>
+          <Link to="/mypage/profile" className={styles.submenuLink}>회원정보수정</Link>
+          <Link to="/mypage/classes" className={styles.submenuLink}>수강신청내역</Link>
+          <Link to="/mypage/rentals" className={styles.submenuLink}>대관신청내역</Link>
         </div>
       )}
     </>
@@ -167,4 +151,3 @@ const Navbar = ({
 };
 
 export default Navbar;
-
