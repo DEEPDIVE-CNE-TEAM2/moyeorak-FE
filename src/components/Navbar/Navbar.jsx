@@ -1,18 +1,23 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from './Navbar.module.css';
 import { CiLogin, CiLogout } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-const districts = ["강남구", "용산구", "송파구"];
-
-const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) => {
+const Navbar = ({
+  selectedDistrict,
+  onDistrictChange,
+  districts,
+  districtToPath,
+  isLoggedIn,
+  onLogout,
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPinned, setSubmenuPinned] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // 현재 경로 가져오기
+  const location = useLocation();
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
@@ -21,13 +26,14 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
     setDropdownOpen(false);
   };
 
+  const selectedPath = (districtToPath && districtToPath[selectedDistrict]) || '';
+
   return (
     <>
       <div className={styles.topBar}>
         클라우드 기반 공공 체육시설 예약 서비스
       </div>
 
-      {/* 상단 네비게이션 바 */}
       <nav className={styles.navbar}>
         <div className={styles.leftSection}>
           <Link to="/">
@@ -48,7 +54,7 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
             </button>
             {dropdownOpen && (
               <ul className={styles.dropdownList}>
-                {districts.map((district) => (
+                {(districts || []).map((district) => (
                   <li key={district} onClick={() => handleSelect(district)}>
                     {district}
                   </li>
@@ -60,8 +66,8 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
           <ul className={styles.menu}>
             <li>
               <Link
-                to="/place"
-                className={`${styles.menuLink} ${location.pathname === "/place" ? styles.active : ''}`}
+                to={`/${selectedPath}/place`}
+                className={`${styles.menuLink} ${location.pathname.includes('/place') ? styles.activeMenu : ''}`}
               >
                 시설
               </Link>
@@ -69,7 +75,7 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
             <li>
               <Link
                 to="/classReservation"
-                className={`${styles.menuLink} ${location.pathname === "/classReservation" ? styles.active : ''}`}
+                className={`${styles.menuLink} ${location.pathname === '/classReservation' ? styles.activeMenu : ''}`}
               >
                 수강신청
               </Link>
@@ -77,7 +83,7 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
             <li>
               <Link
                 to="/rental"
-                className={`${styles.menuLink} ${location.pathname === "/rental" ? styles.active : ''}`}
+                className={`${styles.menuLink} ${location.pathname === '/rental' ? styles.activeMenu : ''}`}
               >
                 대관신청
               </Link>
@@ -85,7 +91,7 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
             <li>
               <Link
                 to="/announcement"
-                className={`${styles.menuLink} ${location.pathname === "/announcement" ? styles.active : ''}`}
+                className={`${styles.menuLink} ${location.pathname === '/announcement' ? styles.activeMenu : ''}`}
               >
                 이용안내
               </Link>
@@ -96,7 +102,7 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
               onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
               onClick={() => setSubmenuPinned(!submenuPinned)}
             >
-              <span className={`${styles.menuLink} ${location.pathname.startsWith("/mypage") ? styles.active : ''}`}>
+              <span className={`${styles.menuLink} ${location.pathname.startsWith("/mypage") ? styles.activeMenu : ''}`}>
                 마이페이지
               </span>
             </li>
@@ -130,7 +136,6 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
         </div>
       </nav>
 
-      {/* 마이페이지 서브 네비바 */}
       {showSubmenu && (
         <div
           className={styles.submenuBar}
@@ -139,19 +144,19 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
         >
           <Link
             to="/mypage/profile"
-            className={`${styles.submenuLink} ${location.pathname === "/mypage/profile" ? styles.active : ''}`}
+            className={`${styles.submenuLink} ${location.pathname === "/mypage/profile" ? styles.activeMenu : ''}`}
           >
             회원정보수정
           </Link>
           <Link
             to="/mypage/classes"
-            className={`${styles.submenuLink} ${location.pathname === "/mypage/classes" ? styles.active : ''}`}
+            className={`${styles.submenuLink} ${location.pathname === "/mypage/classes" ? styles.activeMenu : ''}`}
           >
             수강신청내역
           </Link>
           <Link
             to="/mypage/rentals"
-            className={`${styles.submenuLink} ${location.pathname === "/mypage/rentals" ? styles.active : ''}`}
+            className={`${styles.submenuLink} ${location.pathname === "/mypage/rentals" ? styles.activeMenu : ''}`}
           >
             대관신청내역
           </Link>

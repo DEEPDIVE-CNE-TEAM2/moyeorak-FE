@@ -7,19 +7,15 @@ import RecommendProgramListAfterLogin from '../../components/RecommendProgramLis
 
 const districtToPath = {
   "송파구": "songpa",
-  "강남구": "gangnam",
-  "용산구": "yongsan",
+  "중구": "jung",
+  "성동구": "seongdong",
 };
 
 const Songpa = () => {
-  // 기존에 있던 selectedDistrict 변수 대신 useState로 상태 관리
   const [selectedDistrict, setSelectedDistrict] = useState("송파구");
-
-  // 로그인 상태 관리 (로그인 상태로 시작)
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
 
-  // 네비바 드롭다운에서 지역 선택 시 실행될 함수
   const handleDistrictChange = (district) => {
     setSelectedDistrict(district);
     const path = districtToPath[district];
@@ -28,11 +24,12 @@ const Songpa = () => {
     }
   };
 
-  // 로그아웃 함수 예시
   const handleLogout = () => {
     setIsLoggedIn(false);
-    // 로그아웃 후 다른 페이지로 이동시키고 싶으면 추가 처리 가능
+    // 로그아웃 후 추가 이동이 필요하면 여기서 처리
   };
+
+  const districts = ["중구", "성동구", "송파구"];
 
   return (
     <div>
@@ -41,11 +38,12 @@ const Songpa = () => {
         onDistrictChange={handleDistrictChange}
         isLoggedIn={isLoggedIn}
         onLogout={handleLogout}
+        districts={districts}
+        districtToPath={districtToPath} 
       />
       <PromotionBanner />
       <RecommendProgramListAfterLogin />
-      
-      {/* 로그인 상태가 false면 로그인 안내 문구 혹은 로그인 페이지 리다이렉트도 가능 */}
+
       {!isLoggedIn && (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
           <h2>로그아웃 되었습니다. 다시 로그인해 주세요.</h2>

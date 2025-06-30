@@ -147,7 +147,6 @@
 }
 
 
-
 .mypageWrapper {
   position: relative;
 }
@@ -181,4 +180,7 @@
 .menuLink.active,
 .submenuLink.active {
   color: #3096E6;
+.activeMenu {
+  color: #3096E6;
+  font-weight: 600;
 }
