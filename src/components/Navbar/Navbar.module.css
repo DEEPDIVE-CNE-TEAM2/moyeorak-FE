@@ -177,3 +177,8 @@
   cursor: pointer;
   white-space: nowrap;
 }
+
+.menuLink.active,
+.submenuLink.active {
+  color: #3096E6;
+}

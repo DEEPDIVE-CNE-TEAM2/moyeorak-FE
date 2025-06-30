@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from './Navbar.module.css';
 import { CiLogin, CiLogout } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
@@ -12,11 +12,12 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPinned, setSubmenuPinned] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로 가져오기
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleSelect = (district) => {
-    if(onDistrictChange) onDistrictChange(district);
+    if (onDistrictChange) onDistrictChange(district);
     setDropdownOpen(false);
   };
 
@@ -57,17 +58,47 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
           </div>
 
           <ul className={styles.menu}>
-            <li><Link to="/place" className={styles.menuLink}>시설</Link></li>
-            <li><Link to="/classReservation" className={styles.menuLink}>수강신청</Link></li>
-            <li><Link to="/rental" className={styles.menuLink}>대관신청</Link></li>
-            <li><Link to="/announcement" className={styles.menuLink}>이용안내</Link></li>
+            <li>
+              <Link
+                to="/place"
+                className={`${styles.menuLink} ${location.pathname === "/place" ? styles.active : ''}`}
+              >
+                시설
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/classReservation"
+                className={`${styles.menuLink} ${location.pathname === "/classReservation" ? styles.active : ''}`}
+              >
+                수강신청
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/rental"
+                className={`${styles.menuLink} ${location.pathname === "/rental" ? styles.active : ''}`}
+              >
+                대관신청
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/announcement"
+                className={`${styles.menuLink} ${location.pathname === "/announcement" ? styles.active : ''}`}
+              >
+                이용안내
+              </Link>
+            </li>
             <li
               className={styles.mypageWrapper}
               onMouseEnter={() => setShowSubmenu(true)}
               onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
-              onClick={() => setSubmenuPinned(!submenuPinned)} // 클릭 시 고정/해제 toggle
+              onClick={() => setSubmenuPinned(!submenuPinned)}
             >
-              <span className={styles.menuLink}>마이페이지</span>
+              <span className={`${styles.menuLink} ${location.pathname.startsWith("/mypage") ? styles.active : ''}`}>
+                마이페이지
+              </span>
             </li>
           </ul>
         </div>
@@ -106,9 +137,24 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-          <Link to="/mypage/profile" className={styles.submenuLink}>회원정보수정</Link>
-          <Link to="/mypage/classes" className={styles.submenuLink}>수강신청내역</Link>
-          <Link to="/mypage/rentals" className={styles.submenuLink}>대관신청내역</Link>
+          <Link
+            to="/mypage/profile"
+            className={`${styles.submenuLink} ${location.pathname === "/mypage/profile" ? styles.active : ''}`}
+          >
+            회원정보수정
+          </Link>
+          <Link
+            to="/mypage/classes"
+            className={`${styles.submenuLink} ${location.pathname === "/mypage/classes" ? styles.active : ''}`}
+          >
+            수강신청내역
+          </Link>
+          <Link
+            to="/mypage/rentals"
+            className={`${styles.submenuLink} ${location.pathname === "/mypage/rentals" ? styles.active : ''}`}
+          >
+            대관신청내역
+          </Link>
         </div>
       )}
     </>
