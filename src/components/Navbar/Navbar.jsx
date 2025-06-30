@@ -1,24 +1,33 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from './Navbar.module.css';
 import { CiLogin, CiLogout } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-const districts = ["강남구", "용산구", "송파구"];
-
-const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) => {
+const Navbar = ({
+  selectedDistrict,
+  onDistrictChange,
+  districts,
+  districtToPath,
+  isLoggedIn,
+  onLogout,
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPinned, setSubmenuPinned] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleSelect = (district) => {
-    if(onDistrictChange) onDistrictChange(district);
+    if (onDistrictChange) onDistrictChange(district);
     setDropdownOpen(false);
   };
+
+  // 방어적으로 접근 (districtToPath가 undefined일 수도 있으니)
+  const selectedPath = (districtToPath && districtToPath[selectedDistrict]) || '';
 
   return (
     <>
@@ -26,7 +35,6 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
         클라우드 기반 공공 체육시설 예약 서비스
       </div>
 
-      {/* 상단 네비게이션 바 */}
       <nav className={styles.navbar}>
         <div className={styles.leftSection}>
           <Link to="/">
@@ -47,7 +55,7 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
             </button>
             {dropdownOpen && (
               <ul className={styles.dropdownList}>
-                {districts.map((district) => (
+                {(districts || []).map((district) => (
                   <li key={district} onClick={() => handleSelect(district)}>
                     {district}
                   </li>
@@ -57,15 +65,43 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
           </div>
 
           <ul className={styles.menu}>
-            <li><Link to="/place" className={styles.menuLink}>시설</Link></li>
-            <li><Link to="/classReservation" className={styles.menuLink}>수강신청</Link></li>
-            <li><Link to="/rental" className={styles.menuLink}>대관신청</Link></li>
-            <li><Link to="/announcement" className={styles.menuLink}>이용안내</Link></li>
+            <li>
+              <Link
+                to={`/${selectedPath}/place`}
+                className={`${styles.menuLink} ${location.pathname.includes('/place') ? styles.activeMenu : ''}`}
+              >
+                시설
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/classReservation"
+                className={`${styles.menuLink} ${location.pathname === '/classReservation' ? styles.activeMenu : ''}`}
+              >
+                수강신청
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/rental"
+                className={`${styles.menuLink} ${location.pathname === '/rental' ? styles.activeMenu : ''}`}
+              >
+                대관신청
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/announcement"
+                className={`${styles.menuLink} ${location.pathname === '/announcement' ? styles.activeMenu : ''}`}
+              >
+                이용안내
+              </Link>
+            </li>
             <li
               className={styles.mypageWrapper}
               onMouseEnter={() => setShowSubmenu(true)}
               onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
-              onClick={() => setSubmenuPinned(!submenuPinned)} // 클릭 시 고정/해제 toggle
+              onClick={() => setSubmenuPinned(!submenuPinned)}
             >
               <span className={styles.menuLink}>마이페이지</span>
             </li>
@@ -99,7 +135,6 @@ const Navbar = ({ selectedDistrict, onDistrictChange, isLoggedIn, onLogout }) =>
         </div>
       </nav>
 
-      {/* 마이페이지 서브 네비바 */}
       {showSubmenu && (
         <div
           className={styles.submenuBar}

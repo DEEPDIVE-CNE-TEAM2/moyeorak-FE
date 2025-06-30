@@ -8,8 +8,8 @@ import PopupModal from '../components/popupmodal/PopupModal';
 
 const districtToPath = {
   "송파구": "songpa",
-  "강남구": "gangnam",
-  "용산구": "yongsan",
+  "중구": "jung",
+  "성동구": "seongdong",
 };
 
 const Home = () => {

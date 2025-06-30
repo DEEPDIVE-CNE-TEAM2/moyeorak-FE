@@ -147,7 +147,6 @@
 }
 
 
-
 .mypageWrapper {
   position: relative;
 }
@@ -176,4 +175,9 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.activeMenu {
+  color: #3096E6;
+  font-weight: 600;
 }

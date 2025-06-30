@@ -14,9 +14,13 @@ import Rentals from './pages/Mypage/Rentals'
 import ChangePassword from './pages/Mypage/Profile/ChangePassword'
 import ChangePhoneNumber from './pages/Mypage/Profile/ChangePhoneNumber'
 import WithdrawAccount from './pages/Mypage/Profile/WithdrawAccount'
-import Gangnam from './pages/Area/Gangnam';
 import Songpa from './pages/Area/Songpa';
-import Yongsan from './pages/Area/Yongsan';
+import Jung from './pages/Area/Jung';
+import Seongdong from './pages/Area/Seongdong';
+import JungFacility from './components/Facility/JungFacility';
+import SongpaFacility from "./components/Facility/SongpaFacility";
+import SeongdongFacility from "./components/Facility/SeongdongFacility";
+
 
 const App = () => {
   return (
@@ -35,9 +39,14 @@ const App = () => {
         <Route path='/mypage/profile/password' element={<ChangePassword />} />
         <Route path='/mypage/profile/phone' element={<ChangePhoneNumber />} />
         <Route path='/mypage/profile/withdraw' element={<WithdrawAccount />} />
-        <Route path='/gangnam' element={<Gangnam />} />
         <Route path='/songpa' element={<Songpa />} />
-        <Route path='/yongsan' element={<Yongsan />} />
+        <Route path='/jung' element={<Jung />} />
+        <Route path='/seongdong' element={<Seongdong />} />
+        <Route path="/jung/place" element={<JungFacility />} />
+        <Route path="/songpa/place" element={<SongpaFacility />} />
+        <Route path="/seongdong/place" element={<SeongdongFacility />} />
+        
+
       </Routes>
     </BrowserRouter>
   )

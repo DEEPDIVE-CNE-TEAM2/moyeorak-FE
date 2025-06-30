@@ -34,8 +34,8 @@ const PopupModal = ({ onConfirm }) => {
           onChange={handleChange}
         >
           <option value="">지역을 선택하세요</option>
-          <option value="강남구">강남구</option>
-          <option value="용산구">용산구</option>
+          <option value="중구">중구</option>
+          <option value="성동구">성동구</option>
           <option value="송파구">송파구</option>
         </select>
 
