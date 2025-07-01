@@ -5,7 +5,8 @@ import Home from './pages/Home'
 import JoinMembership from './pages/JoinMembership'
 import Login from './pages/Login'
 import Place from './pages/Place'
-import ClassReservation from './pages/ClassReservation/ClassReservation'
+import ClassReservation from './pages/ClassReservation/ClassReservation/ClassReservation'
+import ClassReservationDetail from './pages/ClassReservation/ClassReservationDetail/ClassReservationDetail'
 import Rental from './pages/Rental/Rental'
 import Announcement from './pages/Announcement'
 import Classes from './pages/Mypage/Classes'
@@ -31,6 +32,7 @@ const App = () => {
         <Route path='/login' element={<Login/>} />
         <Route path='/place' element={<Place/>} />
         <Route path='/classReservation' element={<ClassReservation/>} />
+        <Route path='/classReservation/:id' element={<ClassReservationDetail/>} />
         <Route path='/rental' element={<Rental/>} />
         <Route path='/announcement' element={<Announcement/>} />
         <Route path='/mypage/classes' element={<Classes/>} />
