@@ -1,9 +1,9 @@
 import React from 'react';
 import './Card.css';
-import icon1 from '../../img/Person.svg';
-import icon2 from '../../img/Calendar.svg';
-import icon3 from '../../img/PocketWatch.svg';
-import icon4 from '../../img/MagneticCard.svg';
+import icon1 from '../../../img/Person.svg';
+import icon2 from '../../../img/Calendar.svg';
+import icon3 from '../../../img/PocketWatch.svg';
+import icon4 from '../../../img/MagneticCard.svg';
 
 const Card = ({ imageUrl, title, details }) => {
   const labels = ['대상', '접수기간', '이용기간', '비용'];
