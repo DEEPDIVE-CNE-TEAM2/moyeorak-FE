@@ -1,12 +1,58 @@
-
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../../../img/아이콘최종.png';
+import select from '../../../img/Select.svg';
+import './PaymentPage.css';
 
 const PaymentPage = () => {
+  const navigate = useNavigate();
+
   return (
-    <div style={{ padding: '40px', textAlign: 'center' }}>
-      <h1>결제 페이지</h1>
-      <p>여기서 결제를 진행합니다.</p>
+    <div className="payment-page">
+      {/* 로고 + 구분선 */}
+      <div className="payment-header">
+        <img src={logo} alt="로고" className="payment-logo" />
+        <div className="payment-divider" />
+      </div>
+
+      {/* 전체 내용 묶음 */}
+      <div className="payment-content-wrapper">
+        {/* 타이틀 */}
+        <h1 className="payment-title">결제</h1>
+
+        {/* 강의 정보, 결제수단, 버튼 */}
+        <div className="payment-container">
+          {/* 강의 정보 박스 */}
+          <div className="info-box">
+            <div className="info-header">강의</div>
+            <div className="info-content">
+              <div className="lecture-title">어린이 야구교실</div>
+              <div className="lecture-price">50,000원</div>
+            </div>
+          </div>
+
+          {/* 결제수단 박스 */}
+          <div className="info-box">
+            <div className="info-header">결제수단</div>
+            <div className="info-content-column">
+              {["신용/체크카드", "휴대폰", "무통장입금"].map((method, idx) => (
+                <div className="payment-method" key={idx}>
+                  <img src={select} alt="선택" className="method-icon" />
+                  <span>{method}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 결제 버튼 */}
+          <button className="pay-button" onClick={() => navigate('/')}>
+            결제하기
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default PaymentPage;
+
