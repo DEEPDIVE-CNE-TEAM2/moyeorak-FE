@@ -1,8 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Popupmodal.module.css';
 import X from '../../../img/X.svg';
 
 const Popupmodal = ({ onClose, data }) => {
+  const navigate = useNavigate();
+
+  const handleConfirm = () => {
+    navigate('/classReservation/payment');
+  };
+
   return (
     <div className={styles.backdrop}>
       <div className={styles.modal}>
@@ -17,21 +24,21 @@ const Popupmodal = ({ onClose, data }) => {
         </div>
 
         <div className={styles.content}>
-        {[
-        { label: '강좌명', value: data?.title },
-        { label: '센터', value: data?.center || '-' },
-        { label: '이용기간', value: data?.period || '-' },
-        { label: '이용시간', value: data?.time || '-' },
-        { label: '수강료', value: data?.price || '-' },
-        ].map((item, idx, arr) => (
-        <React.Fragment key={idx}>
-            <div className={styles.row}>
-            <div className={styles.left}>{item.label}</div>
-            <div className={styles.right}>{item.value}</div>
-            </div>
-            <div className={styles.divider}></div>
-        </React.Fragment>
-        ))}
+          {[
+            { label: '강좌명', value: data?.title },
+            { label: '센터', value: data?.center || '-' },
+            { label: '이용기간', value: data?.period || '-' },
+            { label: '이용시간', value: data?.time || '-' },
+            { label: '수강료', value: data?.price || '-' },
+          ].map((item, idx, arr) => (
+            <React.Fragment key={idx}>
+              <div className={styles.row}>
+                <div className={styles.left}>{item.label}</div>
+                <div className={styles.right}>{item.value}</div>
+              </div>
+              {idx !== arr.length - 1 && <div className={styles.divider}></div>}
+            </React.Fragment>
+          ))}
         </div>
 
         <div className={styles.confirmText}>
@@ -39,7 +46,7 @@ const Popupmodal = ({ onClose, data }) => {
         </div>
 
         <div className={styles.buttonWrapper}>
-          <button className={styles.confirmBtn} onClick={onClose}>확인</button>
+          <button className={styles.confirmBtn} onClick={handleConfirm}>확인</button>
         </div>
       </div>
     </div>
@@ -47,3 +54,4 @@ const Popupmodal = ({ onClose, data }) => {
 };
 
 export default Popupmodal;
+
