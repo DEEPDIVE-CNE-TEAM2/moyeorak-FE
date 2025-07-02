@@ -1,21 +1,27 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Card.css';
-import icon1 from '../../../img/Calendar.svg';
-import icon2 from '../../../img/PocketWatch.svg';
-import icon3 from '../../../img/MagneticCard.svg';
-import icon4 from '../../../img/Person.svg';
+import icon1 from '../../../../img/Calendar.svg';
+import icon2 from '../../../../img/PocketWatch.svg';
+import icon3 from '../../../../img/MagneticCard.svg';
+import icon4 from '../../../../img/Person.svg';
 
-const Card = ({ imageUrl, title, details }) => {
+const Card = ({ id, imageUrl, title, details }) => {
   const labels = ['접수기간', '이용기간', '수강료', '대상'];
   const icons = [icon1, icon2, icon3, icon4];
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/classReservation/${id}`);
+  };
 
   return (
     <div className="card">
       <div
         className="card-image"
         style={{ backgroundImage: `url(${imageUrl})` }}>
-          <div className="card-badge">접수중</div>
-        </div>
+        <div className="card-badge">접수중</div>
+      </div>
       <div className="card-title">{title}</div>
       <div className="card-content-wrapper">
         <div className="card-content-1">
@@ -35,7 +41,9 @@ const Card = ({ imageUrl, title, details }) => {
         </div>
       </div>
       <div className="card-button-wrapper">
-        <button className="card-button">신청하기</button>
+        <button className="card-button" onClick={handleClick}>
+          신청하기
+        </button>
       </div>
     </div>
   );

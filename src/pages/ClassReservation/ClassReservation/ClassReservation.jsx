@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../../components/Navbar/Navbar.jsx';
+import Navbar from '../../../components/Navbar/Navbar.jsx';
 import SelectPanel from './SelectPanel/SelectPanel.jsx';
 import Card from './card/Card.jsx';
 import styles from './ClassReservation.module.css';
-import testimg from '../../img/testimg.jpg'; // 더미 이미지
+import testimg from '../../../img/testimg.jpg'; // 더미 이미지
 
 const ClassReservation = () => {
   const [cardData, setCardData] = useState([]);
@@ -56,10 +56,11 @@ const ClassReservation = () => {
         <div className={styles.cardGrid}>
           {cardData.map((card) => (
             <Card
-              key={card.id}
-              imageUrl={card.imageUrl}
-              title={card.title}
-              details={card.details}
+            key={card.id}
+            id={card.id}
+            imageUrl={card.imageUrl}
+            title={card.title}
+            details={card.details}
             />
           ))}
         </div>

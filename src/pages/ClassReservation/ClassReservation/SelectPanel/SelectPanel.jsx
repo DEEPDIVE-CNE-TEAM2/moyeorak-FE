@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './SelectPanel.module.css';
-import swim_black from '../../../img/swim_black.svg';
-import swim_blue from '../../../img/swim_blue.svg';
-import deleteIcon from '../../../img/delete.svg';
+import swim_black from '../../../../img/swim_black.svg';
+import swim_blue from '../../../../img/swim_blue.svg';
+import deleteIcon from '../../../../img/delete.svg';
 
 const SelectPanel = () => {
   const [selectedSport, setSelectedSport] = useState(null);
