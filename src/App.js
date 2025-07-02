@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Place from './pages/Place'
 import ClassReservation from './pages/ClassReservation/ClassReservation/ClassReservation'
 import ClassReservationDetail from './pages/ClassReservation/ClassReservationDetail/ClassReservationDetail'
+import Payment from './pages/ClassReservation/PaymentPage/PaymentPage'
 import Rental from './pages/Rental/Rental'
 import Announcement from './pages/Announcement'
 import Classes from './pages/Mypage/Classes'
@@ -35,6 +36,7 @@ const App = () => {
         <Route path='/place' element={<Place/>} />
         <Route path='/classReservation' element={<ClassReservation/>} />
         <Route path='/classReservation/:id' element={<ClassReservationDetail/>} />
+        <Route path='/classReservation/:id/payment' element={<Payment/>}/>
         <Route path='/rental' element={<Rental/>} />
         <Route path='/announcement' element={<Announcement/>} />
         <Route path='/mypage/classes' element={<Classes/>} />
