@@ -3,11 +3,14 @@ import './Classes.css';
 import Navbar from '../../../components/Navbar/Navbar';
 import Search from '../../../img/search.svg';
 import Down from '../../../img/down.svg';
+import Popupmodal from './Popupmodal/Popupmodal';
 
 const Classes = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expandedRowIndex, setExpandedRowIndex] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const originalRows = [
     {
@@ -121,7 +124,15 @@ const Classes = () => {
                         <td align="center" className="mini-title">관내/관외 여부</td>
                         <td align="center">{row.inOrOut}</td>
                         <td rowSpan="2" colSpan="2" align="center">
-                          <button className="cancel-button">수강취소</button>
+                          <button
+                            className="cancel-button"
+                            onClick={() => {
+                              setSelectedRowData(row);
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            수강취소
+                          </button>
                         </td>
                       </tr>
                       <tr className="detail-row">
@@ -138,6 +149,16 @@ const Classes = () => {
           </table>
         </div>
       </div>
+
+      {isModalOpen && (
+        <Popupmodal
+          data={selectedRowData}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedRowData(null);
+          }}
+        />
+      )}
     </>
   );
 };
