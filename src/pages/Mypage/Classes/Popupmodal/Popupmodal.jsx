@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Popupmodal.css';
 import X_black from '../../../../img/X_black.svg';
+import Popupmodal2 from './Popupmodal2'; // 팝업2 import
 
 const Popupmodal = ({ onClose, data }) => {
+  const [showSecondModal, setShowSecondModal] = useState(false);
+
+  if (showSecondModal) {
+    return <Popupmodal2 title={data.title} onClose={onClose} />;
+  }
+
   return (
     <div className="popup-overlay">
       <div className="popup-container">
@@ -43,7 +50,12 @@ const Popupmodal = ({ onClose, data }) => {
           수강 신청을 취소하시겠습니까?
         </div>
 
-        <button className="popup-confirm-button">확인</button>
+        <button
+          className="popup-confirm-button"
+          onClick={() => setShowSecondModal(true)}
+        >
+          확인
+        </button>
       </div>
     </div>
   );

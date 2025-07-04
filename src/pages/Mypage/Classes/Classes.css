@@ -27,7 +27,7 @@
 
 .classes-table thead th {
   padding: 16px;
-  text-align: left;
+  text-align: center;
   color: #000;
   font-size: 18px;
   font-style: normal;
@@ -70,6 +70,7 @@
   font-weight: 700;
   line-height: normal;
   letter-spacing: 1px;
+  margin: 0 auto;
 }
 
 /* 상태별 색상 */
