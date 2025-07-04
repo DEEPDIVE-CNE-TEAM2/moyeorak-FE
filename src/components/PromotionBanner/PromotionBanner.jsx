@@ -20,7 +20,7 @@ const bannerData = {
     },
     {
       image: "/img/탁구강의홍보.png",
-      text: "요가 초급반 10월 개강 확정",
+      text: "탁구 초급반 10월 개강 확정",
     },
   ],
   songpa: [

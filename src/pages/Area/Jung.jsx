@@ -1,21 +1,20 @@
-// Jung.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import Navbar from '../../components/Navbar/Navbar';
-import PromotionBanner from '../../components/PromotionBanner/PromotionBanner';
-import RecommendProgramSection from '../../components/RecommendProgramSection/RecommendProgramSection';
+import Navbar from "../../components/Navbar/Navbar";
+import PromotionBanner from "../../components/PromotionBanner/PromotionBanner";
+import RecommendProgramSection from "../../components/RecommendProgramSection/RecommendProgramSection";
 
 const districtToPath = {
   "중구": "jung",
-  "송파구": "songpa",
   "성동구": "seongdong",
+  "송파구": "songpa",
 };
 
 const districtToRentalPath = {
-  "중구": "/rental/jung",
-  "송파구": "/rental/songpa",
-  "성동구": "/rental/seongdong",
+  "중구": "/jung/rental",
+  "성동구": "/seongdong/rental",
+  "송파구": "/songpa/rental",
 };
 
 const Jung = () => {

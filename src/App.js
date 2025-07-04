@@ -25,8 +25,8 @@ import SeongdongFacility from "./components/Facility/SeongdongFacility";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyPhone from "./pages/VerifyPhone";
 import JungRental from "./pages/Rental/JungRental";
-import SongpaRental from "./pages/Rental/SongpaRental";
 import SeongdongRental from "./pages/Rental/SeongdongRental";
+import SongpaRental from "./pages/Rental/SongpaRental";
 
 const App = () => {
   return (
@@ -55,9 +55,9 @@ const App = () => {
         <Route path="/seongdong/place" element={<SeongdongFacility />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-phone" element={<VerifyPhone />} />
-        <Route path="/rental/junggu" element={<JungRental />} />
-        <Route path="/rental/songpa" element={<SongpaRental />} />
-        <Route path="/rental/seongdong" element={<SeongdongRental />} />
+        <Route path="/jung/rental" element={<JungRental />} />
+        <Route path="/seongdong/rental" element={<SeongdongRental />} />
+        <Route path="/songpa/rental" element={<SongpaRental />} />
 
         
 

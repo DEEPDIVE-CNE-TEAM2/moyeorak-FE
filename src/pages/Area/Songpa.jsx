@@ -5,10 +5,18 @@ import Navbar from '../../components/Navbar/Navbar';
 import PromotionBanner from '../../components/PromotionBanner/PromotionBanner';
 import RecommendProgramListAfterLogin from '../../components/RecommendProgramListAfterLogin/RecommendProgramListAfterLogin';
 
+const districts = ["중구", "성동구", "송파구"];
+
 const districtToPath = {
   "송파구": "songpa",
   "중구": "jung",
   "성동구": "seongdong",
+};
+
+const districtToRentalPath = {
+  "송파구": "/songpa/rental",
+  "중구": "/jung/rental",
+  "성동구": "/seongdong/rental",
 };
 
 const Songpa = () => {
@@ -24,26 +32,35 @@ const Songpa = () => {
     }
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    // 로그아웃 후 추가 이동이 필요하면 여기서 처리
+  const handleLogoClick = () => {
+    const path = districtToPath[selectedDistrict];
+    if (path) {
+      navigate(`/${path}`);
+    }
   };
 
-  const districts = ["중구", "성동구", "송파구"];
+  const handleFacilityClick = () => {
+    const path = districtToPath[selectedDistrict];
+    if (path) {
+      navigate(`/${path}/place`);
+    }
+  };
 
   return (
     <div>
       <Navbar
         selectedDistrict={selectedDistrict}
         onDistrictChange={handleDistrictChange}
+        onLogoClick={handleLogoClick}
+        onFacilityClick={handleFacilityClick}
         isLoggedIn={isLoggedIn}
-        onLogout={handleLogout}
+        onLogout={() => setIsLoggedIn(false)}
         districts={districts}
-        districtToPath={districtToPath} 
+        districtToPath={districtToPath}
+        districtToRentalPath={districtToRentalPath}
       />
       <PromotionBanner />
       <RecommendProgramListAfterLogin />
-
       {!isLoggedIn && (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
           <h2>로그아웃 되었습니다. 다시 로그인해 주세요.</h2>

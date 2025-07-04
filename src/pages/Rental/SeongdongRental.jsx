@@ -1,16 +1,157 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import Navbar from "../../components/Navbar/Navbar";
+import { PiSoccerBallFill } from "react-icons/pi";
+import { CiBaseball } from "react-icons/ci";
+import { FaSwimmer } from "react-icons/fa";
+import { IoIosTennisball } from "react-icons/io";
+import { GiShuttlecock } from "react-icons/gi";
+import { RiPingPongFill } from "react-icons/ri";
+import styles from "./RentalPage.module.css";
+
+const districts = ["중구", "성동구", "송파구"];
+
+const districtToMainPath = {
+  중구: "jung",
+  성동구: "seongdong",
+  송파구: "songpa",
+};
+
+const districtToRentalPath = {
+  중구: "/jung/rental",
+  성동구: "/seongdong/rental",
+  송파구: "/songpa/rental",
+};
+
+const sportOptions = [
+  { name: "축구", icon: <PiSoccerBallFill size={60} /> },
+  { name: "야구", icon: <CiBaseball size={60} /> },
+  { name: "수영", icon: <FaSwimmer size={60} /> },
+  { name: "테니스", icon: <IoIosTennisball size={60} /> },
+  { name: "배드민턴", icon: <GiShuttlecock size={60} /> },
+  { name: "탁구", icon: <RiPingPongFill size={60} /> },
+];
+
+const seongdongFacilities = [
+  {
+    name: "중랑물재생센터 축구장",
+    sport: "축구",
+    image: "/img/중랑물재생센터축구장.png",
+    address: "성동구 중랑물재생센터 123",
+    time: "09:00 - 21:00",
+    capacity: "10명",
+    contact: "02-1111-2222",
+  },
+  {
+    name: "중랑물재생센터 테니스장",
+    sport: "테니스",
+    image: "/img/중랑물재생센터테니스장.png",
+    address: "성동구 중랑물재생센터 123",
+    time: "07:00 - 20:00",
+    capacity: "12명",
+    contact: "02-3333-4444",
+  },
+  {
+    name: "서울숲 테니스장",
+    sport: "테니스",
+    image: "/img/서울숲테니스장.png",
+    address: "성동구 서울숲길 456",
+    time: "06:00 - 21:00",
+    capacity: "16명",
+    contact: "02-5555-6666",
+  },
+  {
+    name: "중랑물재생센터 배드민턴장",
+    sport: "배드민턴",
+    image: "/img/중랑물재생센터배드민턴장.png",
+    address: "성동구 중랑물재생센터 123",
+    time: "08:00 - 22:00",
+    capacity: "10명",
+    contact: "02-7777-8888",
+  },
+];
 
 const SeongdongRental = () => {
+  const [selectedSport, setSelectedSport] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState("성동구");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.includes("/jung")) setSelectedDistrict("중구");
+    else if (location.pathname.includes("/seongdong")) setSelectedDistrict("성동구");
+    else if (location.pathname.includes("/songpa")) setSelectedDistrict("송파구");
+  }, [location.pathname]);
+
+  const toggleSelection = (value) => {
+    setSelectedSport(value === selectedSport ? null : value);
+  };
+
+  const handleDistrictChange = (district) => {
+    setSelectedDistrict(district);
+    const path = districtToRentalPath[district];
+    if (path) navigate(path);
+  };
+
+  const filteredFacilities = seongdongFacilities.filter(
+    (f) => !selectedSport || f.sport === selectedSport
+  );
+
   return (
-    <div className="rental-page">
-      <h1>성동구 체육시설 대관</h1>
-      <p>성동구 지역의 공공 체육시설을 예약할 수 있습니다.</p>
-      <ul>
-        <li>성동구 체육관</li>
-        <li>서울숲 운동장</li>
-        <li>성동구 배구장</li>
-      </ul>
-    </div>
+    <>
+      <Navbar
+        selectedDistrict={selectedDistrict}
+        onDistrictChange={handleDistrictChange}
+        districts={districts}
+        districtToPath={districtToMainPath}
+        districtToRentalPath={districtToRentalPath}
+      />
+
+      <div className={styles.panelWrapper}>
+        <div className={styles.sectionTitle}>종목 선택</div>
+        <div className={styles.optionsRow}>
+          {sportOptions.map((sport, idx) => (
+            <div
+              key={idx}
+              className={`${styles.sportButton} ${selectedSport === sport.name ? styles.selected : ""}`}
+              onClick={() => toggleSelection(sport.name)}
+            >
+              <div
+                className={styles.icon}
+                style={{ color: selectedSport === sport.name ? "#3096E6" : "#555" }}
+              >
+                {sport.icon}
+              </div>
+              <div
+                className={styles.label}
+                style={{ color: selectedSport === sport.name ? "#3096E6" : "#333" }}
+              >
+                {sport.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.cardContainer}>
+        {filteredFacilities.length === 0 ? (
+          <p className={styles.noInfo}>해당 시설 정보가 없습니다.</p>
+        ) : (
+          filteredFacilities.map((facility, idx) => (
+            <div key={idx} className={styles.card}>
+              <img src={facility.image} alt={facility.name} className={styles.image} />
+              <div className={styles.content}>
+                <h3>{facility.name}</h3>
+                <p className={styles.info}><strong>주소 </strong>{facility.address}</p>
+                <p className={styles.info}><strong>운영시간 </strong>{facility.time}</p>
+                <p className={styles.info}><strong>정원 </strong>{facility.capacity}</p>
+                <p className={styles.info}><strong>문의 </strong>{facility.contact}</p>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </>
   );
 };
 

@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from './Navbar.module.css';
 import { CiLogin, CiLogout } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const Navbar = ({
-  selectedDistrict,
+  selectedDistrict = "",
   onDistrictChange,
-  districts,
-  districtToPath,
-  districtToRentalPath,
-  isLoggedIn,
+  districts = [],
+  districtToPath = {},
+  districtToRentalPath = {},
+  isLoggedIn = false,
   onLogout,
+  onLogoClick, 
+  onFacilityClick, 
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
@@ -22,12 +24,15 @@ const Navbar = ({
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
+  // 드롭다운에서 지역구 선택 시
   const handleSelect = (district) => {
     if (onDistrictChange) onDistrictChange(district);
     setDropdownOpen(false);
   };
 
-  const selectedPath = (districtToPath && districtToPath[selectedDistrict]) || "";
+  // 경로 계산
+  const selectedPath = districtToPath?.[selectedDistrict] || "";
+  const rentalPath = districtToRentalPath?.[selectedDistrict] || "/";
 
   return (
     <>
@@ -37,9 +42,23 @@ const Navbar = ({
 
       <nav className={styles.navbar}>
         <div className={styles.leftSection}>
-          <Link to={`/${selectedPath}`}>
+          {/* 로고 클릭 시 onLogoClick 호출 */}
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              if (onLogoClick) onLogoClick();
+              else {
+                if (selectedDistrict && districtToPath[selectedDistrict]) {
+                  navigate(`/${districtToPath[selectedDistrict]}`);
+                } else {
+                  navigate("/");
+                }
+              }
+            }}
+          >
             <img src="/img/아이콘최종.png" alt="로고" className={styles.logo} />
-          </Link>
+          </a>
 
           <div className={styles.locationWrapper}>
             <button
@@ -55,7 +74,7 @@ const Navbar = ({
             </button>
             {dropdownOpen && (
               <ul className={styles.dropdownList}>
-                {(districts || []).map((district) => (
+                {districts.map((district) => (
                   <li key={district} onClick={() => handleSelect(district)}>
                     {district}
                   </li>
@@ -66,36 +85,56 @@ const Navbar = ({
 
           <ul className={styles.menu}>
             <li>
-              <Link
-                to={`/${selectedPath}/place`}
+              {/* 시설 메뉴 클릭 시 onFacilityClick 호출 */}
+              <a
+                href={`/${selectedPath}/place`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onFacilityClick) onFacilityClick();
+                  else {
+                    navigate(`/${selectedPath}/place`);
+                  }
+                }}
                 className={`${styles.menuLink} ${location.pathname.includes('/place') ? styles.activeMenu : ''}`}
               >
                 시설
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                to="/classReservation"
+              <a
+                href="/classReservation"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/classReservation");
+                }}
                 className={`${styles.menuLink} ${location.pathname === '/classReservation' ? styles.activeMenu : ''}`}
               >
                 수강신청
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                to={`/rental/${districtToRentalPath?.[selectedDistrict] || ""}`}
+              <a
+                href={rentalPath}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(rentalPath);
+                }}
                 className={`${styles.menuLink} ${location.pathname.includes('/rental') ? styles.activeMenu : ''}`}
               >
                 대관신청
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                to="/announcement"
+              <a
+                href="/announcement"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/announcement");
+                }}
                 className={`${styles.menuLink} ${location.pathname === '/announcement' ? styles.activeMenu : ''}`}
               >
                 이용안내
-              </Link>
+              </a>
             </li>
             <li
               className={styles.mypageWrapper}
@@ -111,13 +150,27 @@ const Navbar = ({
         <div className={styles.authButtons}>
           {!isLoggedIn ? (
             <>
-              <Link to="/login" className={styles.authLink}>
+              <a
+                href="/login"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/login");
+                }}
+                className={styles.authLink}
+              >
                 <CiLogin size={20} /> 로그인
-              </Link>
+              </a>
               <div className={styles.divider}></div>
-              <Link to="/joinMembership" className={styles.authLink}>
+              <a
+                href="/joinMembership"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/joinMembership");
+                }}
+                className={styles.authLink}
+              >
                 <FaUserPlus size={18} /> 회원가입
-              </Link>
+              </a>
             </>
           ) : (
             <button
@@ -141,9 +194,9 @@ const Navbar = ({
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-          <Link to="/mypage/profile" className={styles.submenuLink}>회원정보수정</Link>
-          <Link to="/mypage/classes" className={styles.submenuLink}>수강신청내역</Link>
-          <Link to="/mypage/rentals" className={styles.submenuLink}>대관신청내역</Link>
+          <a href="/mypage/profile" onClick={e => { e.preventDefault(); navigate("/mypage/profile"); }} className={styles.submenuLink}>회원정보수정</a>
+          <a href="/mypage/classes" onClick={e => { e.preventDefault(); navigate("/mypage/classes"); }} className={styles.submenuLink}>수강신청내역</a>
+          <a href="/mypage/rentals" onClick={e => { e.preventDefault(); navigate("/mypage/rentals"); }} className={styles.submenuLink}>대관신청내역</a>
         </div>
       )}
     </>

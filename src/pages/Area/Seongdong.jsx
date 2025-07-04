@@ -11,6 +11,12 @@ const districtToPath = {
   "성동구": "seongdong",
 };
 
+const districtToRentalPath = {
+  "중구": "/jung/rental",
+  "송파구": "/songpa/rental",
+  "성동구": "/seongdong/rental",
+};
+
 const Seongdong = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("성동구");
   const navigate = useNavigate();
@@ -32,6 +38,7 @@ const Seongdong = () => {
         onDistrictChange={handleDistrictChange}
         districts={districts}
         districtToPath={districtToPath}
+        districtToRentalPath={districtToRentalPath}
       />
       <PromotionBanner />
       <RecommendProgramSection />
