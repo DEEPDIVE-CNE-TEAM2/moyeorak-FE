@@ -9,7 +9,7 @@ import ClassReservation from './pages/ClassReservation/ClassReservation/ClassRes
 import ClassReservationDetail from './pages/ClassReservation/ClassReservationDetail/ClassReservationDetail'
 import Payment from './pages/ClassReservation/PaymentPage/PaymentPage'
 import Rental from './pages/Rental/Rental'
-import Announcement from './pages/Announcement'
+import Announcement from './pages/Announcement/Announcement'
 import Classes from './pages/Mypage/Classes/Classes'
 import Profile from './pages/Mypage/Profile/Profile'
 import Rentals from './pages/Mypage/Rentals/Rentals'

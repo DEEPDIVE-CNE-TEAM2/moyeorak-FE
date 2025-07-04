@@ -1,0 +1,69 @@
+.announcement-wrapper {
+  width: 1209px;
+  margin: 60px auto;
+  font-family: NanumGothic;
+}
+
+.announcement-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-collapse: collapse;
+}
+
+.announcement-header {
+  display: flex;
+  height: 42px;
+  background: #EFEFEF;
+  border-radius: 3px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: -0.6px;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.announcement-row {
+  display: flex;
+  height: 42px;
+  align-items: center;
+  padding: 0 10px;
+  border-bottom: 1px solid #E9E9E9;
+  font-size: 16px;
+  font-weight: 400;
+  color: #151515;
+  letter-spacing: 1px;
+}
+
+.announcement-row td {
+  text-align: center;
+}
+
+/* 제목은 좌측 정렬 유지 */
+.announcement-row td:nth-child(2) {
+  text-align: left;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+}
+
+.page-btn {
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  font-family: NanumGothic;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 5px;
+}
+
+.page-btn.active {
+  background-color: #3096E6;
+  color: white;
+  font-weight: bold;
+}
