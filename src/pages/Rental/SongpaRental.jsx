@@ -34,6 +34,7 @@ const sportOptions = [
 
 const songpaFacilities = [
   {
+    id: "songpa-soccer1",
     name: "잠실유수지 축구장",
     sport: "축구",
     image: "/img/잠실유수지축구장.png",
@@ -43,6 +44,7 @@ const songpaFacilities = [
     contact: "02-1234-5678",
   },
   {
+    id: "songpa-soccer2",
     name: "탄천축구장",
     sport: "축구",
     image: "/img/탄천축구장.png",
@@ -52,6 +54,7 @@ const songpaFacilities = [
     contact: "02-8765-4321",
   },
   {
+    id: "songpa-baseball1",
     name: "잠실유수지 리틀야구장",
     sport: "야구",
     image: "/img/잠실유수지리틀야구장.png",
@@ -61,6 +64,7 @@ const songpaFacilities = [
     contact: "02-2222-3333",
   },
   {
+    id: "songpa-baseball2",
     name: "탄천야구장",
     sport: "야구",
     image: "/img/탄천야구장.png",
@@ -70,6 +74,7 @@ const songpaFacilities = [
     contact: "02-4444-5555",
   },
   {
+    id: "songpa-tennis1",
     name: "잠실유수지 테니스장",
     sport: "테니스",
     image: "/img/잠실유수지테니스장.png",
@@ -79,6 +84,7 @@ const songpaFacilities = [
     contact: "02-3333-4444",
   },
   {
+    id: "songpa-tennis2",
     name: "송파테니스장",
     sport: "테니스",
     image: "/img/송파테니스장.png",
@@ -155,8 +161,13 @@ const SongpaRental = () => {
         {filteredFacilities.length === 0 ? (
           <p className={styles.noInfo}>해당 시설 정보가 없습니다.</p>
         ) : (
-          filteredFacilities.map((facility, idx) => (
-            <div key={idx} className={styles.card}>
+          filteredFacilities.map((facility) => (
+            <div
+              key={facility.id}
+              className={styles.card}
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(`/songpa/rental/detail/${facility.id}`)}
+            >
               <img src={facility.image} alt={facility.name} className={styles.image} />
               <div className={styles.content}>
                 <h3>{facility.name}</h3>

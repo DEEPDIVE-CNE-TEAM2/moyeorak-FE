@@ -34,6 +34,7 @@ const sportOptions = [
 
 const seongdongFacilities = [
   {
+    id: "seongdong-soccer1",
     name: "중랑물재생센터 축구장",
     sport: "축구",
     image: "/img/중랑물재생센터축구장.png",
@@ -43,6 +44,7 @@ const seongdongFacilities = [
     contact: "02-1111-2222",
   },
   {
+    id: "seongdong-tennis1",
     name: "중랑물재생센터 테니스장",
     sport: "테니스",
     image: "/img/중랑물재생센터테니스장.png",
@@ -52,6 +54,7 @@ const seongdongFacilities = [
     contact: "02-3333-4444",
   },
   {
+    id: "seongdong-tennis2",
     name: "서울숲 테니스장",
     sport: "테니스",
     image: "/img/서울숲테니스장.png",
@@ -61,6 +64,7 @@ const seongdongFacilities = [
     contact: "02-5555-6666",
   },
   {
+    id: "seongdong-badminton1",
     name: "중랑물재생센터 배드민턴장",
     sport: "배드민턴",
     image: "/img/중랑물재생센터배드민턴장.png",
@@ -137,8 +141,13 @@ const SeongdongRental = () => {
         {filteredFacilities.length === 0 ? (
           <p className={styles.noInfo}>해당 시설 정보가 없습니다.</p>
         ) : (
-          filteredFacilities.map((facility, idx) => (
-            <div key={idx} className={styles.card}>
+          filteredFacilities.map((facility) => (
+            <div
+              key={facility.id}
+              className={styles.card}
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(`/seongdong/rental/detail/${facility.id}`)}
+            >
               <img src={facility.image} alt={facility.name} className={styles.image} />
               <div className={styles.content}>
                 <h3>{facility.name}</h3>
