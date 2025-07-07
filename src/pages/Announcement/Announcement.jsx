@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar.jsx';
 import './Announcement.css';
+import down from '../../img/down.svg';
+import search from '../../img/search.svg';
 
 const dummyAnnouncements = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
@@ -15,18 +17,44 @@ const PAGE_GROUP_SIZE = 5;
 
 const Announcement = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [filteredAnnouncements, setFilteredAnnouncements] = useState(
+    [...dummyAnnouncements].sort((a, b) => new Date(b.date) - new Date(a.date))
+  );
+  const [searchType, setSearchType] = useState('제목');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const navigate = useNavigate();
 
-  const sortedAnnouncements = [...dummyAnnouncements].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
-  );
+  const handleSearchTypeChange = (type) => {
+    setSearchType(type);
+    setIsDropdownOpen(false);
+  };
 
-  const totalPages = Math.ceil(sortedAnnouncements.length / ITEMS_PER_PAGE);
+  const handleSearch = () => {
+    const keyword = searchKeyword.trim().toLowerCase();
+    if (!keyword) {
+      setFilteredAnnouncements(
+        [...dummyAnnouncements].sort((a, b) => new Date(b.date) - new Date(a.date))
+      );
+      return;
+    }
+
+    const filtered = dummyAnnouncements.filter((item) =>
+      item.title.toLowerCase().includes(keyword) // 제목으로만 검색
+    );
+    setFilteredAnnouncements(
+      [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date))
+    );
+    setCurrentPage(1);
+  };
+
+  const totalPages = Math.ceil(filteredAnnouncements.length / ITEMS_PER_PAGE);
   const currentGroup = Math.floor((currentPage - 1) / PAGE_GROUP_SIZE);
   const groupStart = currentGroup * PAGE_GROUP_SIZE + 1;
   const groupEnd = Math.min(groupStart + PAGE_GROUP_SIZE - 1, totalPages);
 
-  const paginatedAnnouncements = sortedAnnouncements.slice(
+  const paginatedAnnouncements = filteredAnnouncements.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -35,6 +63,39 @@ const Announcement = () => {
     <>
       <Navbar />
       <div className="announcement-wrapper">
+        <div className="announcement-search-bar">
+          <div className="search-select-wrapper">
+            <div className="search-select" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              {searchType}
+              <img src={down} alt="dropdown" className="dropdown-icon" />
+            </div>
+            {isDropdownOpen && (
+              <div className="search-options">
+                {['제목', '내용', '제목/내용'].map((type) => (
+                  <div key={type} className="search-option" onClick={() => handleSearchTypeChange(type)}>
+                    {type}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="search-input-box">
+            <input
+              type="text"
+              className="search-input"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+            />
+            <button className="search-button" onClick={handleSearch}>
+              <img src={search} alt="search" className="search-icon" />
+            </button>
+          </div>
+        </div>
+
         <table className="announcement-table">
           <thead>
             <tr className="announcement-header">
@@ -48,7 +109,7 @@ const Announcement = () => {
             {paginatedAnnouncements.map((item, index) => (
               <tr key={item.id} className="announcement-row">
                 <td style={{ flex: 1, textAlign: 'center' }}>
-                  {sortedAnnouncements.length - ((currentPage - 1) * ITEMS_PER_PAGE + index)}
+                  {filteredAnnouncements.length - ((currentPage - 1) * ITEMS_PER_PAGE + index)}
                 </td>
                 <td
                   style={{ flex: 6, textAlign: 'left', cursor: 'pointer', color: '#151515' }}
@@ -100,4 +161,3 @@ const Announcement = () => {
 };
 
 export default Announcement;
-
