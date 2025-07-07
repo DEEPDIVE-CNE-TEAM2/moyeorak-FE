@@ -34,6 +34,7 @@ const sportOptions = [
 
 const jungFacilities = [
   {
+    id: "jung-soccer1",
     name: "손기정 축구장",
     sport: "축구",
     image: "/img/중구축구장.png",
@@ -43,6 +44,7 @@ const jungFacilities = [
     contact: "02-1234-5678",
   },
   {
+    id: "jung-tennis1",
     name: "장충테니스장",
     sport: "테니스",
     image: "/img/중구테니스장.png",
@@ -52,6 +54,7 @@ const jungFacilities = [
     contact: "02-234-5678",
   },
   {
+    id: "jung-badminton1",
     name: "충무스포츠센터 대체육관 배드민턴장",
     sport: "배드민턴",
     image: "/img/중구배드민턴장.png",
@@ -61,6 +64,7 @@ const jungFacilities = [
     contact: "02-345-6789",
   },
   {
+    id: "jung-pingpong1",
     name: "충무스포츠센터 대체육관 탁구장",
     sport: "탁구",
     image: "/img/중구탁구장.png",
@@ -70,6 +74,7 @@ const jungFacilities = [
     contact: "02-456-7890",
   },
   {
+    id: "jung-swim1",
     name: "충무스포츠센터 수영장",
     sport: "수영",
     image: "/img/중구수영장.png",
@@ -79,6 +84,7 @@ const jungFacilities = [
     contact: "02-567-8901",
   },
   {
+    id: "jung-swim2",
     name: "회현체육센터 수영장",
     sport: "수영",
     image: "/img/회현체육센터수영장.png",
@@ -88,14 +94,12 @@ const jungFacilities = [
     contact: "02-678-9012",
   },
 ];
-
 const JungRental = () => {
   const [selectedSport, setSelectedSport] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState("중구");
   const navigate = useNavigate();
   const location = useLocation();
 
-  // URL 경로 따라 selectedDistrict 동기화
   useEffect(() => {
     if (location.pathname.includes("/jung")) setSelectedDistrict("중구");
     else if (location.pathname.includes("/seongdong")) setSelectedDistrict("성동구");
@@ -156,8 +160,13 @@ const JungRental = () => {
         {filteredFacilities.length === 0 ? (
           <p className={styles.noInfo}>해당 시설 정보가 없습니다.</p>
         ) : (
-          filteredFacilities.map((facility, idx) => (
-            <div key={idx} className={styles.card}>
+          filteredFacilities.map((facility) => (
+            <div
+              key={facility.id}
+              className={styles.card}
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(`/jung/rental/detail/${facility.id}`)}
+            >
               <img src={facility.image} alt={facility.name} className={styles.image} />
               <div className={styles.content}>
                 <h3>{facility.name}</h3>

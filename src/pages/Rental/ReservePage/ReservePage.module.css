@@ -1,0 +1,231 @@
+.container {
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1100px; 
+  margin: 0 auto;
+}
+
+.content {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* 달력 박스 */
+.calendarBox {
+  flex: 1;
+  border: 1.5px solid #ddd;
+  padding: 20px 25px;
+  border-radius: 10px;
+  max-width: 67%; 
+  min-width: 400px;
+  min-height: 450px;  
+  height: auto; 
+}
+
+/* 오른쪽 인포 박스 */
+.infoBox {
+  flex: 1;
+  border: 1.5px solid #ddd;
+  padding: 20px 25px;
+  border-radius: 10px;
+  max-width: 33%;
+  min-width: 280px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+/* 달력 헤더 (년월) */
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 12px;
+  font-size: 22px;
+  color: #333;
+}
+
+.arrowIcon {
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.weekdays, .days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 5px;
+}
+
+.day {
+  padding: 14px;    
+  margin: 4px;    
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;   
+  font-weight: normal; 
+  user-select: none;  
+  transition: background-color 0.3s ease;
+}
+
+/* 선택된 날짜 */
+.selected {
+  background-color: #f59c9c;
+  color: inherit;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+/* 예약 불가 날짜 */
+.disabled {
+  color: #ccc;
+  background-color: #f0f0f0;
+  pointer-events: none;
+}
+
+/* 선택된 날짜 표시 텍스트 */
+.dateLabel {
+  font-weight: bold;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+/* 시간 버튼 그룹 */
+.timeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* 시간 버튼 */
+.timeBtn {
+  padding: 14px;
+  font-size: 18px;
+  font-weight: normal;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: inherit;
+}
+
+.timeBtn:hover {
+  background-color: #eee;
+}
+
+/* 선택된 시간 버튼 */
+.timeBtn.selected {
+  background-color: #f59c9c;
+  color: inherit;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+/* 인원 선택 셀렉트 */
+.select {
+  padding: 12px;
+  font-size: 18px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* 안내 문구 */
+.notice {
+  color: #999999;
+  font-style: normal;
+  font-weight: 500;
+  padding: 10px 0;
+  font-size: 16px;
+}
+
+/* 버튼 그룹 */
+.buttonGroup {
+  margin-top: 25px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.applyBtn,
+.backBtn {
+  padding: 10px 55px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.applyBtn {
+  background-color: #3096E6;
+}
+
+.applyBtn:hover {
+  background-color: #267acb;
+}
+
+.backBtn {
+  background-color: #9A9A9A;
+}
+
+.backBtn:hover {
+  background-color: #7a7a7a;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.timeBtn {
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: inherit;
+}
+
+.timeBtn:hover {
+  background-color: #eee;
+}
+
+.timeBtn.selected {
+  background-color: #f59c9c;
+  font-weight: normal;
+}
+
+.timeBtn.disabled {
+  background-color: #f0f0f0;
+  color: #aaa;
+  border-color: #ddd;
+  cursor: not-allowed;
+}

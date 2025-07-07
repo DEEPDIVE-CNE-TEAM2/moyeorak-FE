@@ -5,12 +5,21 @@ import { CiLogin, CiLogout } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
+const districts = ["중구", "성동구", "송파구"];
+const districtToPath = {
+  "중구": "jung",
+  "성동구": "seongdong",
+  "송파구": "songpa",
+};
+const districtToRentalPath = {
+  "중구": "/jung/rental",
+  "성동구": "/seongdong/rental",
+  "송파구": "/songpa/rental",
+};
+
 const Navbar = ({
-  selectedDistrict = "",
+  selectedDistrict = "중구",
   onDistrictChange,
-  districts = [],
-  districtToPath = {},
-  districtToRentalPath = {},
   isLoggedIn = false,
   onLogout,
   onLogoClick, 
@@ -28,11 +37,12 @@ const Navbar = ({
   const handleSelect = (district) => {
     if (onDistrictChange) onDistrictChange(district);
     setDropdownOpen(false);
+    navigate(`/${districtToPath[district]}`);
   };
 
-  // 경로 계산
-  const selectedPath = districtToPath?.[selectedDistrict] || "";
-  const rentalPath = districtToRentalPath?.[selectedDistrict] || "/";
+  // 선택된 구 경로
+  const selectedPath = districtToPath[selectedDistrict] || "";
+  const rentalPath = districtToRentalPath[selectedDistrict] || "/";
 
   return (
     <>
@@ -42,18 +52,16 @@ const Navbar = ({
 
       <nav className={styles.navbar}>
         <div className={styles.leftSection}>
-          {/* 로고 클릭 시 onLogoClick 호출 */}
+          {/* 로고 클릭 시 해당 구 메인페이지 이동 */}
           <a
             href="/"
             onClick={(e) => {
               e.preventDefault();
               if (onLogoClick) onLogoClick();
-              else {
-                if (selectedDistrict && districtToPath[selectedDistrict]) {
-                  navigate(`/${districtToPath[selectedDistrict]}`);
-                } else {
-                  navigate("/");
-                }
+              else if(selectedDistrict && districtToPath[selectedDistrict]){
+                navigate(`/${districtToPath[selectedDistrict]}`);
+              } else {
+                navigate("/");
               }
             }}
           >
@@ -85,7 +93,6 @@ const Navbar = ({
 
           <ul className={styles.menu}>
             <li>
-              {/* 시설 메뉴 클릭 시 onFacilityClick 호출 */}
               <a
                 href={`/${selectedPath}/place`}
                 onClick={(e) => {

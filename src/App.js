@@ -28,6 +28,8 @@ import VerifyPhone from "./pages/VerifyPhone";
 import JungRental from "./pages/Rental/JungRental";
 import SeongdongRental from "./pages/Rental/SeongdongRental";
 import SongpaRental from "./pages/Rental/SongpaRental";
+import RentalDetailContainer from './pages/Rental/RentalDetailContainer';
+import ReservePage from './pages/Rental/ReservePage/ReservePage';
 
 
 const App = () => {
@@ -61,7 +63,8 @@ const App = () => {
         <Route path="/jung/rental" element={<JungRental />} />
         <Route path="/seongdong/rental" element={<SeongdongRental />} />
         <Route path="/songpa/rental" element={<SongpaRental />} />
-
+        <Route path="/:district/rental/detail/:id" element={<RentalDetailContainer />} />
+        <Route path="/:district/rental/reserve/:id" element={<ReservePage />} />
         
 
       </Routes>
