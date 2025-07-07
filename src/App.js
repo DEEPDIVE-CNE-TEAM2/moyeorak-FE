@@ -10,6 +10,7 @@ import ClassReservationDetail from './pages/ClassReservation/ClassReservationDet
 import Payment from './pages/ClassReservation/PaymentPage/PaymentPage'
 import Rental from './pages/Rental/Rental'
 import Announcement from './pages/Announcement/Announcement'
+import AnnouncementDetail from './pages/Announcement/AnnouncementDetail/AnnouncementDetail';
 import Classes from './pages/Mypage/Classes/Classes'
 import Profile from './pages/Mypage/Profile/Profile'
 import Rentals from './pages/Mypage/Rentals/Rentals'
@@ -25,9 +26,8 @@ import SeongdongFacility from "./components/Facility/SeongdongFacility";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyPhone from "./pages/VerifyPhone";
 import JungRental from "./pages/Rental/JungRental";
-import SongpaRental from "./pages/Rental/SongpaRental";
 import SeongdongRental from "./pages/Rental/SeongdongRental";
-import AnnouncementDetail from './pages/Announcement/AnnouncementDetail/AnnouncementDetail';
+import SongpaRental from "./pages/Rental/SongpaRental";
 
 
 const App = () => {
@@ -58,9 +58,9 @@ const App = () => {
         <Route path="/seongdong/place" element={<SeongdongFacility />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-phone" element={<VerifyPhone />} />
-        <Route path="/rental/junggu" element={<JungRental />} />
-        <Route path="/rental/songpa" element={<SongpaRental />} />
-        <Route path="/rental/seongdong" element={<SeongdongRental />} />
+        <Route path="/jung/rental" element={<JungRental />} />
+        <Route path="/seongdong/rental" element={<SeongdongRental />} />
+        <Route path="/songpa/rental" element={<SongpaRental />} />
 
         
 

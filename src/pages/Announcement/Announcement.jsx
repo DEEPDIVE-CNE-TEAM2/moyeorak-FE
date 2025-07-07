@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Navbar from '../../components/Navbar/Navbar.jsx';
 import './Announcement.css';
 
@@ -52,8 +51,16 @@ const Announcement = () => {
                   {sortedAnnouncements.length - ((currentPage - 1) * ITEMS_PER_PAGE + index)}
                 </td>
                 <td
-                  style={{ flex: 6, textAlign: 'left', cursor: 'pointer' }}
-                  onClick={() => navigate(`/announcement/${item.id}`)}
+                  style={{ flex: 6, textAlign: 'left', cursor: 'pointer', color: '#151515' }}
+                  onClick={() =>
+                    navigate(`/announcement/${item.id}`, {
+                      state: {
+                        title: item.title,
+                        date: item.date,
+                        views: item.views,
+                      },
+                    })
+                  }
                 >
                   {item.title}
                 </td>
@@ -93,3 +100,4 @@ const Announcement = () => {
 };
 
 export default Announcement;
+

@@ -1,11 +1,22 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import FacilityCard from "./FacilityCard";
 import styles from "./SongpaFacility.module.css";
 
+import {
+  districts,
+  districtToPath,
+  districtToRentalPath,
+} from "../../constants/districtPaths";
+
 const categories = [
-  "축구장", "야구장", "수영장", "테니스장", "배드민턴장", "탁구장",
+  "축구장",
+  "야구장",
+  "수영장",
+  "테니스장",
+  "배드민턴장",
+  "탁구장",
 ];
 
 const facilityData = {
@@ -49,7 +60,7 @@ const facilityData = {
       img: "/img/탄천야구장.png",
     },
   ],
-  수영장: [], 
+  수영장: [],
   테니스장: [
     {
       id: 5,
@@ -70,22 +81,29 @@ const facilityData = {
       img: "/img/송파테니스장.png",
     },
   ],
-  배드민턴장: [], 
-  탁구장: [], 
+  배드민턴장: [],
+  탁구장: [],
 };
-
-const districts = ["중구", "성동구", "송파구"];
-const districtToPath = { 중구: "jung", 성동구: "seongdong", 송파구: "songpa" };
 
 const SongpaFacility = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("송파구");
   const [selectedCategory, setSelectedCategory] = useState("축구장");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.includes("/jung")) setSelectedDistrict("중구");
+    else if (location.pathname.includes("/seongdong")) setSelectedDistrict("성동구");
+    else if (location.pathname.includes("/songpa")) setSelectedDistrict("송파구");
+  }, [location.pathname]);
 
   const handleDistrictChange = (district) => {
     setSelectedDistrict(district);
     const path = districtToPath[district];
-    if (path) navigate(`/${path}/place`);
+    console.log("handleDistrictChange:", district, path);
+    if (path) {
+      navigate(`/${path}/place`);
+    }
   };
 
   const facilities = facilityData[selectedCategory] || [];
@@ -93,22 +111,27 @@ const SongpaFacility = () => {
   return (
     <>
       <Navbar
-        districts={districts}
-        districtToPath={districtToPath}
         selectedDistrict={selectedDistrict}
         onDistrictChange={handleDistrictChange}
+        districts={districts}
+        districtToPath={districtToPath}
+        districtToRentalPath={districtToRentalPath}
       />
+
       <nav className={styles.categoryNav}>
         {categories.map((category) => (
           <span
             key={category}
-            className={`${styles.categoryItem} ${category === selectedCategory ? styles.active : ""}`}
+            className={`${styles.categoryItem} ${
+              category === selectedCategory ? styles.active : ""
+            }`}
             onClick={() => setSelectedCategory(category)}
           >
             {category}
           </span>
         ))}
       </nav>
+
       <div className={styles.facilityList}>
         {facilities.length === 0 ? (
           <p className={styles.noData}>해당 시설 정보가 없습니다.</p>

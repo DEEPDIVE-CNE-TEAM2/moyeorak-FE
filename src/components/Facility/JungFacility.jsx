@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar/Navbar"; 
-import FacilityCard from "./FacilityCard"; 
+import Navbar from "../../components/Navbar/Navbar";
+import FacilityCard from "./FacilityCard";
 import styles from "./JungFacility.module.css";
+
+import {
+  districts,
+  districtToPath,
+  districtToRentalPath,
+} from "../../constants/districtPaths";
 
 const categories = [
   "축구장", "야구장", "수영장", "테니스장", "배드민턴장", "탁구장",
@@ -32,7 +38,7 @@ const facilityData = {
       img: "/img/중구수영장.png",
     },
     {
-      id: 6,
+      id: 3,
       name: "회현체육센터 수영장",
       location: "중구 퇴계로12길 78",
       time: "06:00 - 22:00",
@@ -43,7 +49,7 @@ const facilityData = {
   ],
   테니스장: [
     {
-      id: 3,
+      id: 4,
       name: "장충테니스장",
       location: "중구 장충단로 67",
       time: "07:00 - 20:00",
@@ -54,7 +60,7 @@ const facilityData = {
   ],
   배드민턴장: [
     {
-      id: 4,
+      id: 5,
       name: "충무스포츠센터 대체육관 배드민턴장",
       location: "중구 충무로 45",
       time: "06:00 - 22:00",
@@ -65,7 +71,7 @@ const facilityData = {
   ],
   탁구장: [
     {
-      id: 5,
+      id: 6,
       name: "충무스포츠센터 대체육관 탁구장",
       location: "중구 충무로 45",
       time: "06:00 - 22:00",
@@ -75,9 +81,6 @@ const facilityData = {
     },
   ],
 };
-
-const districts = ["중구", "성동구", "송파구"];
-const districtToPath = { 중구: "jung", 성동구: "seongdong", 송파구: "songpa" };
 
 const JungFacility = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("중구");
@@ -95,22 +98,27 @@ const JungFacility = () => {
   return (
     <>
       <Navbar
-        districts={districts}
-        districtToPath={districtToPath}
         selectedDistrict={selectedDistrict}
         onDistrictChange={handleDistrictChange}
+        districts={districts}
+        districtToPath={districtToPath}
+        districtToRentalPath={districtToRentalPath}
       />
+
       <nav className={styles.categoryNav}>
         {categories.map((category) => (
           <span
             key={category}
-            className={`${styles.categoryItem} ${category === selectedCategory ? styles.active : ""}`}
+            className={`${styles.categoryItem} ${
+              category === selectedCategory ? styles.active : ""
+            }`}
             onClick={() => setSelectedCategory(category)}
           >
             {category}
           </span>
         ))}
       </nav>
+
       <div className={styles.facilityList}>
         {facilities.length === 0 ? (
           <p className={styles.noData}>해당 시설 정보가 없습니다.</p>
