@@ -9,8 +9,16 @@
 .cardGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 60px;
-  justify-content: flex-start;
+  gap: 95px;
+  justify-content: center;
   width: 100%;
   max-width: 1182px;
+}
+
+
+.singleCardWrapper {
+  width: 100%;
+  margin-left: 140px;
+  display: flex;
+  justify-content: flex-start;
 }

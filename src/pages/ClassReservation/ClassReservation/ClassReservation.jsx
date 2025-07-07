@@ -45,6 +45,7 @@ const ClassReservation = () => {
 
     setCardData(dummy);
   }, []);
+  
 
   return (
     <>
@@ -53,17 +54,41 @@ const ClassReservation = () => {
         <SelectPanel />
 
         {/* 카드 그리드 */}
-        <div className={styles.cardGrid}>
-          {cardData.map((card) => (
-            <Card
-            key={card.id}
-            id={card.id}
-            imageUrl={card.imageUrl}
-            title={card.title}
-            details={card.details}
-            />
-          ))}
-        </div>
+<div className={styles.cardGrid}>
+  {cardData.length % 2 === 1 ? (
+    <>
+      {cardData.slice(0, -1).map((card) => (
+        <Card
+          key={card.id}
+          id={card.id}
+          imageUrl={card.imageUrl}
+          title={card.title}
+          details={card.details}
+        />
+      ))}
+      <div className={styles.singleCardWrapper}>
+        <Card
+          key={cardData[cardData.length - 1].id}
+          id={cardData[cardData.length - 1].id}
+          imageUrl={cardData[cardData.length - 1].imageUrl}
+          title={cardData[cardData.length - 1].title}
+          details={cardData[cardData.length - 1].details}
+        />
+      </div>
+    </>
+  ) : (
+    cardData.map((card) => (
+      <Card
+        key={card.id}
+        id={card.id}
+        imageUrl={card.imageUrl}
+        title={card.title}
+        details={card.details}
+      />
+    ))
+  )}
+</div>
+
       </div>
     </>
   );
