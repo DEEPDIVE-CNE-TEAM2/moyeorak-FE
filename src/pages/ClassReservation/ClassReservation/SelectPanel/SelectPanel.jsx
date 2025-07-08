@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import styles from './SelectPanel.module.css';
-import swim_black from '../../../../img/swim_black.svg';
-import swim_blue from '../../../../img/swim_blue.svg';
 import deleteIcon from '../../../../img/delete.svg';
+
+import { PiSoccerBallFill } from 'react-icons/pi';
+import { CiBaseball } from 'react-icons/ci';
+import { FaSwimmer } from 'react-icons/fa';
+import { IoIosTennisball } from 'react-icons/io';
+import { GiShuttlecock } from 'react-icons/gi';
+import { RiPingPongFill } from 'react-icons/ri';
+
+const sportOptions = [
+  { name: '축구', icon: <PiSoccerBallFill size={60} /> },
+  { name: '야구', icon: <CiBaseball size={60} /> },
+  { name: '수영', icon: <FaSwimmer size={60} /> },
+  { name: '테니스', icon: <IoIosTennisball size={60} /> },
+  { name: '배드민턴', icon: <GiShuttlecock size={60} /> },
+  { name: '탁구', icon: <RiPingPongFill size={60} /> },
+];
+
+const statusOptions = ['접수 중', '접수 마감'];
 
 const SelectPanel = () => {
   const [selectedSport, setSelectedSport] = useState(null);
-  const [selectedFacility, setSelectedFacility] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
-
-  const sports = ['수영', '축구', '테니스'];
-  const facilities = ['종합레포츠타운1', '종합레포츠타운2', '종합'];
-  const statuses = ['접수중', '접수마감'];
-
-  const getSportIcon = (sport) => {
-    if (sport === '수영') {
-      return selectedSport === '수영' ? swim_blue : swim_black;
-    }
-    return swim_black;
-  };
 
   const toggleSelect = (value, selectedValue, setter) => {
     setter(value === selectedValue ? null : value);
@@ -26,45 +30,36 @@ const SelectPanel = () => {
 
   return (
     <>
-    <div>
       <div className={styles.wrapper}>
         {/* 종목 선택 */}
         <div className={styles.sectionTitle}>종목 선택</div>
         <div className={styles.sportOptions}>
-          {sports.map((sport, index) => (
+          {sportOptions.map((sport, index) => (
             <div
               key={index}
-              className={`${styles.sportItem} ${selectedSport === sport ? styles.selected : ''}`}
-              onClick={() => toggleSelect(sport, selectedSport, setSelectedSport)}
+              className={`${styles.sportItem} ${selectedSport === sport.name ? styles.selected : ''}`}
+              onClick={() => toggleSelect(sport.name, selectedSport, setSelectedSport)}
             >
-              <img src={getSportIcon(sport)} alt={sport} className={styles.sportIcon} />
-              <div className={styles.sportLabel}>{sport}</div>
+              <div
+                className={styles.sportIcon}
+                style={{ color: selectedSport === sport.name ? '#3096E6' : '#555555' }}
+              >
+                {sport.icon}
+              </div>
+              <div
+                className={styles.sportLabel}
+                style={{ color: selectedSport === sport.name ? '#3096E6' : '#333' }}
+              >
+                {sport.name}
+              </div>
             </div>
           ))}
         </div>
-
-        <div className={styles.divider} />
-
-        {/* 시설 선택 */}
-        <div className={styles.sectionTitle}>시설 선택</div>
-        <div className={styles.facilityOptions}>
-          {facilities.map((facility, index) => (
-            <div
-              key={index}
-              className={`${styles.facilityItem} ${selectedFacility === facility ? styles.selected : ''}`}
-              onClick={() => toggleSelect(facility, selectedFacility, setSelectedFacility)}
-            >
-              {facility}
-            </div>
-          ))}
-        </div>
-
-        <div className={styles.divider} />
 
         {/* 접수 상태 */}
         <div className={styles.sectionTitle}>접수 상태</div>
         <div className={styles.statusOptions}>
-          {statuses.map((status, index) => (
+          {statusOptions.map((status, index) => (
             <div
               key={index}
               className={`${styles.statusItem} ${selectedStatus === status ? styles.selected : ''}`}
@@ -76,43 +71,33 @@ const SelectPanel = () => {
         </div>
       </div>
 
-      {/* 선택된 항목 출력 */}
-      <div className={styles.selectedChips}>
-        {selectedSport && (
-          <div className={styles.chip}>
-            {selectedSport}
-            <img
-              src={deleteIcon}
-              alt="삭제"
-              className={styles.deleteIcon}
-              onClick={() => setSelectedSport(null)}
-            />
-          </div>
-        )}
-        {selectedFacility && (
-          <div className={styles.chip}>
-            {selectedFacility}
-            <img
-              src={deleteIcon}
-              alt="삭제"
-              className={styles.deleteIcon}
-              onClick={() => setSelectedFacility(null)}
-            />
-          </div>
-        )}
-        {selectedStatus && (
-          <div className={styles.chip}>
-            {selectedStatus}
-            <img
-              src={deleteIcon}
-              alt="삭제"
-              className={styles.deleteIcon}
-              onClick={() => setSelectedStatus(null)}
-            />
-          </div>
-        )}
-      </div>
-    </div>
+      {/* 선택된 항목 출력 - wrapper 밖에 배치 */}
+      {(selectedSport || selectedStatus) && (
+        <div className={styles.selectedChips}>
+          {selectedSport && (
+            <div className={styles.chip}>
+              {selectedSport}
+              <img
+                src={deleteIcon}
+                alt="삭제"
+                className={styles.deleteIcon}
+                onClick={() => setSelectedSport(null)}
+              />
+            </div>
+          )}
+          {selectedStatus && (
+            <div className={styles.chip}>
+              {selectedStatus}
+              <img
+                src={deleteIcon}
+                alt="삭제"
+                className={styles.deleteIcon}
+                onClick={() => setSelectedStatus(null)}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 };

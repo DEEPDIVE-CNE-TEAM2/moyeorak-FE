@@ -1,198 +1,175 @@
-.container {
-  padding-left: 106px;
-  padding-top: 40px;
-  padding-right: 200px;
-}
-
-.title {
-  color: #000;
-  font-family: Inter;
-  font-size: 36px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -1px;
-  margin-bottom: 30px;
-}
-
-.contentWrapper {
-  display: flex;
-  gap: 30px;
-  position: relative;
-}
-
-.image {
-  width: 592px;
-  height: 421px;
-  flex-shrink: 0;
-  object-fit: cover;
-}
-
-.detailBox {
-  width: 600px;
-  height: 421px;
-  flex-shrink: 0;
-  background: #fff;
-  border-top: 1px solid #777;
-  border-bottom: 1px solid #777;
-  position: relative;
-}
-
-.detailRow {
-  display: flex;
-  align-items: center;
-  height: calc(421px / 8);
-  position: relative;
-}
-
-.label {
-  width: 30%;
-  color: #000;
-  font-family: Inter;
-  font-size: 25px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -1px;
-  padding-left: 10px;
-}
-
-.value {
-  width: 70%;
-  color: #000;
-  font-family: Inter;
-  font-size: 23px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -1px;
-  padding-left: 10px;
-}
-
-.rowLine {
-  position: absolute;
-  bottom: 0;
-  width: 600px;
-  height: 1px;
-  background: #5d5d5d;
-}
-
-.buttonWrapper {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 20px;
-}
-
-.applyBtn,
-.backBtn {
-  width: 207px;
-  height: 58px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  color: #fff;
-  font-family: Inter;
-  font-size: 25px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -1px;
-  border: none;
-  cursor: pointer;
-}
-
-.applyBtn {
-  background: #3096e6;
-}
-
-.backBtn {
-  background: #cacaca;
-}
-
-
-.extraSection {
-  padding-left: 106px;
-  margin-top: 50px;
-}
-
-.miniSection {
-  margin-bottom: 30px;
-}
-
-.miniTitle {
-  color: #000;
-  font-family: Inter;
-  font-size: 22px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -1px;
-  margin-bottom: 10px;
-}
-
-.miniContent {
-  width: 1240px;
-  background: #eee;
+/* ===== 공통 패널 박스 (대관신청 패널과 동일) ===== */
+.panelWrapper {
   padding: 20px;
+  max-width: 1000px;
+  width: 90%;
+  margin: 50px auto 10px auto;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  background-color: white;
 }
 
-.miniContent ul {
-  list-style-type: disc;
-  padding-left: 20px;
-  margin: 0;
+/* ===== 섹션 제목 스타일 통일 ===== */
+.sectionTitle {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: left;
 }
 
-.miniContent li {
-  color: #000;
-  font-family: Inter;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -1px;
-  margin-bottom: 8px;
+/* ===== 종목선택, 접수상태 전체 박스 스타일 통일 ===== */
+.sportOptions,
+.statusOptions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  max-width: 960px;   /* 대관신청 종목선택 박스 최대 너비 */
+  margin: 0 auto;     /* 중앙 정렬 */
+  justify-content: flex-start;
+  position: relative; /* 선택 밑줄 위치를 위한 상대 위치 */
 }
 
-/* 표 영역 */
-.tableWrapper {
-  width: 1240px;
-  height: 108px;
-  flex-shrink: 0;
-  margin-top: 20px;
-}
-
-.customTable {
-  width: 100%;
-  height: 100%;
-  border-collapse: collapse;
-  background: #fff;
-}
-
-.customTable th,
-.customTable td {
-  border: 1px solid #000;
+/* ===== 종목선택 버튼 및 접수상태 버튼 디자인 통일 ===== */
+.sportItem,
+.statusItem,
+.sportButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+  height: 140px;
   padding: 10px;
+  background-color: white;
+  border: 2px solid #ddd;       /* 테두리 두께 2px */
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
   text-align: center;
-  vertical-align: middle;
+  box-sizing: border-box;
 }
 
-.customTable th {
-  color: #000;
-  font-family: Inter;
-  font-size: 23px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -1px;
-  background: #fff;
+/* 호버 시 배경색 */
+.sportItem:hover,
+.statusItem:hover,
+.sportButton:hover {
+  background-color: #f0f8ff;
 }
 
-.customTable td {
-  color: #000;
-  font-family: Inter;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -1px;
+/* 선택된 버튼 스타일 */
+.sportItem.selected,
+.statusItem.selected,
+.sportButton.selected {
+  border: 2px solid #3096E6 !important;
+  background-color: #e6f3fc !important;
+  color: #3096E6 !important;
 }
+
+/* ===== 아이콘 스타일 통일 ===== */
+.sportIcon,
+.icon {
+  font-size: 60px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  color: #555555;
+  transition: color 0.2s ease;
+}
+
+/* 선택된 아이콘 색상 변경 */
+.sportItem.selected .sportIcon,
+.sportButton.selected .icon {
+  color: #3096E6;
+}
+
+/* ===== 텍스트 라벨 통일 ===== */
+.sportLabel,
+.label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+/* 선택 시 텍스트 색상 변경 */
+.sportItem.selected .sportLabel,
+.sportButton.selected .label {
+  color: #3096E6;
+}
+
+/* ===== 선택된 종목 버튼 아래 밑줄 표시 ===== */
+.sportItem.selected {
+  position: relative;
+}
+
+.sportItem.selected::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;      /* 버튼 바로 아래 */
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background-color: #8F8F8F;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* ===== 선택된 접수상태 아래 밑줄 (필요 시) ===== */
+/* 만약 접수상태도 밑줄 표시 원하면 아래 스타일 추가 */
+/*
+.statusItem.selected {
+  position: relative;
+}
+
+.statusItem.selected::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background-color: #8F8F8F;
+  border-radius: 1px;
+  pointer-events: none;
+}
+*/
+
+/* ===== 기타 (필요에 따라) ===== */
+
+/* .centerWrapper, .cardGrid, .singleCardWrapper 등 레이아웃은 상황에 맞게 조정 */
+
+/* 예: 수강신청 메인 컨테이너 중앙 정렬 및 패딩 */
+.centerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+  gap: 40px;
+  width: 100%;
+}
+
+/* 필요 시 카드 그리드도 max-width 제한 */
+.cardGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 95px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1182px;
+}
+
+/* 수강신청 singleCardWrapper 좌측 정렬 해제 또는 필요시 조정 */
+/* .singleCardWrapper {
+  width: 100%;
+  margin-left: 140px;
+  display: flex;
+  justify-content: flex-start;
+} */
+
+/* 필요시 수강신청 접수상태 박스 위치 조정은 자바스크립트 구조에 맞춰 조절하세요 */
+
