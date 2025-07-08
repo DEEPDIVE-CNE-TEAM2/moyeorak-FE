@@ -1,13 +1,15 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Card.css';
-import icon1 from '../../../../img/Calendar.svg';
-import icon2 from '../../../../img/PocketWatch.svg';
-import icon3 from '../../../../img/MagneticCard.svg';
-import icon4 from '../../../../img/Person.svg';
+// components/Card/Card.jsx
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./Card.module.css";
+
+import icon1 from "../../../../img/Calendar.svg";
+import icon2 from "../../../../img/PocketWatch.svg";
+import icon3 from "../../../../img/MagneticCard.svg";
+import icon4 from "../../../../img/Person.svg";
 
 const Card = ({ id, imageUrl, title, details }) => {
-  const labels = ['접수기간', '이용기간', '수강료', '대상'];
+  const labels = ["접수기간", "이용기간", "수강료", "대상"];
   const icons = [icon1, icon2, icon3, icon4];
   const navigate = useNavigate();
 
@@ -16,34 +18,40 @@ const Card = ({ id, imageUrl, title, details }) => {
   };
 
   return (
-    <div className="card">
+    <div className={styles.card}>
       <div
-        className="card-image"
-        style={{ backgroundImage: `url(${imageUrl})` }}>
-        <div className="card-badge">접수중</div>
+        className={styles.image}
+        style={{ backgroundImage: `url(${imageUrl})` }}
+      >
+        <div className={styles.badge}>접수중</div>
       </div>
-      <div className="card-title">{title}</div>
-      <div className="card-content-wrapper">
-        <div className="card-content-1">
-          {labels.map((label, index) => (
-            <div key={index} className="card-line">
-              <img src={icons[index]} alt="" className="card-icon" />
-              <span>{label}</span>
-            </div>
-          ))}
+
+      <div className={styles.content}>
+        <h3 className={styles.title}>{title}</h3>
+
+        <div className={styles.infoWrapper}>
+          <div className={styles.labels}>
+            {labels.map((label, idx) => (
+              <div key={idx} className={styles.line}>
+                <img src={icons[idx]} alt="" className={styles.icon} />
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+          <div className={styles.values}>
+            {details.map((value, idx) => (
+              <div key={idx} className={styles.line}>
+                {value}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="card-content-2">
-          {details.map((value, index) => (
-            <div key={index} className="card-line">
-              {value}
-            </div>
-          ))}
+
+        <div className={styles.buttonWrapper}>
+          <button className={styles.button} onClick={handleClick}>
+            신청하기
+          </button>
         </div>
-      </div>
-      <div className="card-button-wrapper">
-        <button className="card-button" onClick={handleClick}>
-          신청하기
-        </button>
       </div>
     </div>
   );
