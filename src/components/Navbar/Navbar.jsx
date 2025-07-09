@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from './Navbar.module.css';
 import { CiLogin, CiLogout } from "react-icons/ci";
@@ -20,27 +20,36 @@ const districtToRentalPath = {
 const Navbar = ({
   selectedDistrict = "중구",
   onDistrictChange,
-  isLoggedIn = false,
-  onLogout,
-  onLogoClick, 
-  onFacilityClick, 
+  onLogoClick,
+  onFacilityClick,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPinned, setSubmenuPinned] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  // ✅ 로그인 여부 판단 (accessToken 존재 여부)
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+  }, []);
 
-  // 드롭다운에서 지역구 선택 시
-  const handleSelect = (district) => {
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
+  const handleSelectDistrict = (district) => {
     if (onDistrictChange) onDistrictChange(district);
     setDropdownOpen(false);
     navigate(`/${districtToPath[district]}`);
   };
 
-  // 선택된 구 경로
   const selectedPath = districtToPath[selectedDistrict] || "";
   const rentalPath = districtToRentalPath[selectedDistrict] || "/";
 
@@ -52,17 +61,12 @@ const Navbar = ({
 
       <nav className={styles.navbar}>
         <div className={styles.leftSection}>
-          {/* 로고 클릭 시 해당 구 메인페이지 이동 */}
           <a
             href="/"
             onClick={(e) => {
               e.preventDefault();
               if (onLogoClick) onLogoClick();
-              else if(selectedDistrict && districtToPath[selectedDistrict]){
-                navigate(`/${districtToPath[selectedDistrict]}`);
-              } else {
-                navigate("/");
-              }
+              else navigate(`/${selectedPath}`);
             }}
           >
             <img src="/img/아이콘최종.png" alt="로고" className={styles.logo} />
@@ -71,7 +75,7 @@ const Navbar = ({
           <div className={styles.locationWrapper}>
             <button
               className={`${styles.locationDisplay} ${dropdownOpen ? styles.active : ''}`}
-              onClick={toggleDropdown}
+              onClick={() => setDropdownOpen(!dropdownOpen)}
               aria-expanded={dropdownOpen}
             >
               <IoMdArrowDropdown
@@ -83,7 +87,7 @@ const Navbar = ({
             {dropdownOpen && (
               <ul className={styles.dropdownList}>
                 {districts.map((district) => (
-                  <li key={district} onClick={() => handleSelect(district)}>
+                  <li key={district} onClick={() => handleSelectDistrict(district)}>
                     {district}
                   </li>
                 ))}
@@ -97,10 +101,7 @@ const Navbar = ({
                 href={`/${selectedPath}/place`}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (onFacilityClick) onFacilityClick();
-                  else {
-                    navigate(`/${selectedPath}/place`);
-                  }
+                  onFacilityClick ? onFacilityClick() : navigate(`/${selectedPath}/place`);
                 }}
                 className={`${styles.menuLink} ${location.pathname.includes('/place') ? styles.activeMenu : ''}`}
               >
@@ -182,10 +183,7 @@ const Navbar = ({
           ) : (
             <button
               className={styles.authLink}
-              onClick={() => {
-                if (onLogout) onLogout();
-                else navigate("/login");
-              }}
+              onClick={handleLogout}
               type="button"
             >
               <CiLogout size={20} />
@@ -201,9 +199,9 @@ const Navbar = ({
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-          <a href="/mypage/profile" onClick={e => { e.preventDefault(); navigate("/mypage/profile"); }} className={styles.submenuLink}>회원정보수정</a>
-          <a href="/mypage/classes" onClick={e => { e.preventDefault(); navigate("/mypage/classes"); }} className={styles.submenuLink}>수강신청내역</a>
-          <a href="/mypage/rentals" onClick={e => { e.preventDefault(); navigate("/mypage/rentals"); }} className={styles.submenuLink}>대관신청내역</a>
+          <a onClick={(e) => { e.preventDefault(); navigate("/mypage/profile"); }} className={styles.submenuLink}>회원정보수정</a>
+          <a onClick={(e) => { e.preventDefault(); navigate("/mypage/classes"); }} className={styles.submenuLink}>수강신청내역</a>
+          <a onClick={(e) => { e.preventDefault(); navigate("/mypage/rentals"); }} className={styles.submenuLink}>대관신청내역</a>
         </div>
       )}
     </>
