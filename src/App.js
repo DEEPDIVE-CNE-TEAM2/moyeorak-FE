@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import JoinMembership from './pages/JoinMembership'
 import Login from './pages/Login'
-import Place from './pages/Place'
+import Place from './pages/Place/Place'
 import ClassReservation from './pages/ClassReservation/ClassReservation/ClassReservation'
 import ClassReservationDetail from './pages/ClassReservation/ClassReservationDetail/ClassReservationDetail'
 import Payment from './pages/ClassReservation/PaymentPage/PaymentPage'
@@ -20,14 +20,8 @@ import WithdrawAccount from './pages/Mypage/Profile/WithdrawAccount'
 import Songpa from './pages/Area/Songpa';
 import Jung from './pages/Area/Jung';
 import Seongdong from './pages/Area/Seongdong';
-import JungFacility from './components/Facility/JungFacility';
-import SongpaFacility from "./components/Facility/SongpaFacility";
-import SeongdongFacility from "./components/Facility/SeongdongFacility";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyPhone from "./pages/VerifyPhone";
-import JungRental from "./pages/Rental/JungRental";
-import SeongdongRental from "./pages/Rental/SeongdongRental";
-import SongpaRental from "./pages/Rental/SongpaRental";
 import RentalDetailContainer from './pages/Rental/RentalDetailContainer';
 import ReservePage from './pages/Rental/ReservePage/ReservePage';
 
@@ -55,14 +49,8 @@ const App = () => {
         <Route path='/songpa' element={<Songpa />} />
         <Route path='/jung' element={<Jung />} />
         <Route path='/seongdong' element={<Seongdong />} />
-        <Route path="/jung/place" element={<JungFacility />} />
-        <Route path="/songpa/place" element={<SongpaFacility />} />
-        <Route path="/seongdong/place" element={<SeongdongFacility />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-phone" element={<VerifyPhone />} />
-        <Route path="/jung/rental" element={<JungRental />} />
-        <Route path="/seongdong/rental" element={<SeongdongRental />} />
-        <Route path="/songpa/rental" element={<SongpaRental />} />
         <Route path="/:district/rental/detail/:id" element={<RentalDetailContainer />} />
         <Route path="/:district/rental/reserve/:id" element={<ReservePage />} />
         

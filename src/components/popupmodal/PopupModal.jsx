@@ -8,11 +8,23 @@ const PopupModal = ({ onConfirm }) => {
     setSelected(e.target.value);
   };
 
-  const handleConfirm = () => {
-    if (selected) {
-      onConfirm(selected);
-    }
-  };
+  const REGION_ID_MAP = {
+  '중구': 1,
+  '성동구': 2,
+  '송파구': 3,
+};
+
+ const handleConfirm = () => {
+  if (selected) {
+    const selectedRegionId = REGION_ID_MAP[selected];
+    // 지역명과 지역 ID 함께 넘겨주기
+    onConfirm({ name: selected, id: selectedRegionId });
+
+    // 지역 ID를 localStorage에도 저장
+    localStorage.setItem("selectedRegionId", selectedRegionId);
+    localStorage.setItem("selectedRegionName", selected);
+  }
+};
 
   return (
     <div className="popup-backdrop">

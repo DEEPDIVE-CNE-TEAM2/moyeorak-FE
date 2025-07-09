@@ -28,7 +28,7 @@
 
 .facilityList {
   max-width: 1200px;
-  margin: 0 auto;   /* 화면 중앙 정렬 */
+  margin: 0 auto;   /* 화면 중앙 정렬  */
   display: flex;
   flex-wrap: wrap;
   gap: 32px;

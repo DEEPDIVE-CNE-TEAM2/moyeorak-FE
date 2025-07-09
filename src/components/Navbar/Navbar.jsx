@@ -6,32 +6,35 @@ import { FaUserPlus } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const districts = ["중구", "성동구", "송파구"];
+
 const districtToPath = {
   "중구": "jung",
   "성동구": "seongdong",
   "송파구": "songpa",
 };
-const districtToRentalPath = {
-  "중구": "/jung/rental",
-  "성동구": "/seongdong/rental",
-  "송파구": "/songpa/rental",
+
+const districtToId = {
+  "중구": 1,
+  "성동구": 2,
+  "송파구": 3,
 };
 
 const Navbar = ({
-  selectedDistrict = "중구",
   onDistrictChange,
   onLogoClick,
-  onFacilityClick,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [submenuPinned, setSubmenuPinned] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [currentDistrict, setCurrentDistrict] = useState(
+    localStorage.getItem("selectedRegionName") || "중구"
+  );
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ 로그인 여부 판단 (accessToken 존재 여부)
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
@@ -46,12 +49,19 @@ const Navbar = ({
 
   const handleSelectDistrict = (district) => {
     if (onDistrictChange) onDistrictChange(district);
+
+    const regionPath = districtToPath[district];
+    const selectedRegionId = districtToId[district];
+
+    localStorage.setItem("selectedRegionName", district);
+    localStorage.setItem("selectedRegionId", selectedRegionId);
+
+    setCurrentDistrict(district);
     setDropdownOpen(false);
-    navigate(`/${districtToPath[district]}`);
+    navigate(`/${regionPath}`);
   };
 
-  const selectedPath = districtToPath[selectedDistrict] || "";
-  const rentalPath = districtToRentalPath[selectedDistrict] || "/";
+  const selectedRegionId = localStorage.getItem("selectedRegionId") || 1;
 
   return (
     <>
@@ -66,7 +76,7 @@ const Navbar = ({
             onClick={(e) => {
               e.preventDefault();
               if (onLogoClick) onLogoClick();
-              else navigate(`/${selectedPath}`);
+              else navigate(`/${districtToPath[currentDistrict]}`);
             }}
           >
             <img src="/img/아이콘최종.png" alt="로고" className={styles.logo} />
@@ -82,8 +92,9 @@ const Navbar = ({
                 size={18}
                 className={dropdownOpen ? styles.iconRotated : ''}
               />
-              <span>{selectedDistrict || "지역 선택"}</span>
+              <span>{currentDistrict || "지역 선택"}</span>
             </button>
+
             {dropdownOpen && (
               <ul className={styles.dropdownList}>
                 {districts.map((district) => (
@@ -98,52 +109,56 @@ const Navbar = ({
           <ul className={styles.menu}>
             <li>
               <a
-                href={`/${selectedPath}/place`}
+                href={`/place?selectedRegionId=${selectedRegionId}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  onFacilityClick ? onFacilityClick() : navigate(`/${selectedPath}/place`);
+                  navigate(`/place?selectedRegionId=${selectedRegionId}`);
                 }}
                 className={`${styles.menuLink} ${location.pathname.includes('/place') ? styles.activeMenu : ''}`}
               >
                 시설
               </a>
             </li>
+
             <li>
               <a
-                href="/classReservation"
+                href={`/classReservation?selectedRegionId=${selectedRegionId}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/classReservation");
+                  navigate(`/classReservation?selectedRegionId=${selectedRegionId}`);
                 }}
                 className={`${styles.menuLink} ${location.pathname === '/classReservation' ? styles.activeMenu : ''}`}
               >
                 수강신청
               </a>
             </li>
+
             <li>
               <a
-                href={rentalPath}
+                href={`/rental?selectedRegionId=${selectedRegionId}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate(rentalPath);
+                  navigate(`/rental?selectedRegionId=${selectedRegionId}`);
                 }}
                 className={`${styles.menuLink} ${location.pathname.includes('/rental') ? styles.activeMenu : ''}`}
               >
                 대관신청
               </a>
             </li>
+
             <li>
               <a
-                href="/announcement"
+                href={`/announcement?selectedRegionId=${selectedRegionId}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/announcement");
+                  navigate(`/announcement?selectedRegionId=${selectedRegionId}`);
                 }}
                 className={`${styles.menuLink} ${location.pathname === '/announcement' ? styles.activeMenu : ''}`}
               >
                 공지사항
               </a>
             </li>
+
             <li
               className={styles.mypageWrapper}
               onMouseEnter={() => setShowSubmenu(true)}
@@ -199,9 +214,33 @@ const Navbar = ({
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-          <a onClick={(e) => { e.preventDefault(); navigate("/mypage/profile"); }} className={styles.submenuLink}>회원정보수정</a>
-          <a onClick={(e) => { e.preventDefault(); navigate("/mypage/classes"); }} className={styles.submenuLink}>수강신청내역</a>
-          <a onClick={(e) => { e.preventDefault(); navigate("/mypage/rentals"); }} className={styles.submenuLink}>대관신청내역</a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/mypage/profile?selectedRegionId=${selectedRegionId}`);
+            }}
+            className={styles.submenuLink}
+          >
+            회원정보수정
+          </a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/mypage/classes?selectedRegionId=${selectedRegionId}`);
+            }}
+            className={styles.submenuLink}
+          >
+            수강신청내역
+          </a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/mypage/rentals?selectedRegionId=${selectedRegionId}`);
+            }}
+            className={styles.submenuLink}
+          >
+            대관신청내역
+          </a>
         </div>
       )}
     </>
