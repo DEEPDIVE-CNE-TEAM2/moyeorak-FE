@@ -44,7 +44,7 @@ const Navbar = ({
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setIsLoggedIn(false);
-    navigate("/login");
+    navigate("/");
   };
 
   const handleSelectDistrict = (district) => {
@@ -163,10 +163,20 @@ const Navbar = ({
               className={styles.mypageWrapper}
               onMouseEnter={() => setShowSubmenu(true)}
               onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
-              onClick={() => setSubmenuPinned(!submenuPinned)}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  const goToLogin = window.confirm("로그인 후 이용가능합니다. \n로그인 페이지로 이동하시겠습니까?");
+                  if (goToLogin) {
+                    navigate("/login");
+                  }
+                  return;
+                }
+                setSubmenuPinned(!submenuPinned);
+              }}
             >
               <span className={styles.menuLink}>마이페이지</span>
             </li>
+
           </ul>
         </div>
 
@@ -214,29 +224,63 @@ const Navbar = ({
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-        <button
-          type="button"
-          onClick={() => navigate(`/mypage/profile?selectedRegionId=${selectedRegionId}`)}
-          className={styles.submenuLink}
-        >
-          회원정보수정
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate(`/mypage/classes?selectedRegionId=${selectedRegionId}`)}
-          className={styles.submenuLink}
-        >
-          수강신청내역
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate(`/mypage/rentals?selectedRegionId=${selectedRegionId}`)}
-          className={styles.submenuLink}
-        >
-          대관신청내역
-        </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!isLoggedIn) {
+                const goToLogin = window.confirm(
+                  "로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?"
+                );
+                if (goToLogin) {
+                  navigate("/login");
+                }
+                return;
+              }
+              navigate(`/mypage/profile?selectedRegionId=${selectedRegionId}`);
+            }}
+            className={styles.submenuLink}
+          >
+            회원정보수정
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!isLoggedIn) {
+                const goToLogin = window.confirm(
+                  "로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?"
+                );
+                if (goToLogin) {
+                  navigate("/login");
+                }
+                return;
+              }
+              navigate(`/mypage/classes?selectedRegionId=${selectedRegionId}`);
+            }}
+            className={styles.submenuLink}
+          >
+            수강신청내역
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!isLoggedIn) {
+                const goToLogin = window.confirm(
+                  "로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?"
+                );
+                if (goToLogin) {
+                  navigate("/login");
+                }
+                return;
+              }
+              navigate(`/mypage/rentals?selectedRegionId=${selectedRegionId}`);
+            }}
+            className={styles.submenuLink}
+          >
+            대관신청내역
+          </button>
         </div>
       )}
+
     </>
   );
 };
