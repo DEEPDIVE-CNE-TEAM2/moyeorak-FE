@@ -19,7 +19,6 @@ const ReservePage = () => {
 
   const disabledDates = facility?.reservedDates || [];
   const maxPeople = facility?.maxPeople || 0;
-  const district = facility?.district || "jung";
 
   // 한국 시간 기준 날짜 문자열 반환 (YYYY-MM-DD)
   const getKoreanDateString = (date) => {
@@ -33,6 +32,7 @@ const ReservePage = () => {
     } else {
       setDisabledTimes([]);
     }
+
   }, [selectedDate, facility]);
 
   const handleMonthChange = (diff) => {
@@ -102,12 +102,12 @@ const ReservePage = () => {
 
     if (window.confirm(confirmMsg)) {
       alert("신청되었습니다.");
-      navigate(`/${district}/rental`);
+      navigate(`/rental`);
     }
   };
 
   const handleCancelClick = () => {
-    navigate(`/${district}/rental`);
+    navigate(`/rental`);
   };
 
   return (

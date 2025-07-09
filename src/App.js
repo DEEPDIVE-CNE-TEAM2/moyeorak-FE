@@ -51,8 +51,8 @@ const App = () => {
         <Route path='/seongdong' element={<Seongdong />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-phone" element={<VerifyPhone />} />
-        <Route path="/:district/rental/detail/:id" element={<RentalDetailContainer />} />
-        <Route path="/:district/rental/reserve/:id" element={<ReservePage />} />
+        <Route path="/rental/detail/:id" element={<RentalDetailContainer />} />
+        <Route path="/rental/reserve/:id" element={<ReservePage />} />
         
 
       </Routes>
