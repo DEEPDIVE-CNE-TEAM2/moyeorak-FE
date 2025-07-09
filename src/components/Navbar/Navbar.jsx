@@ -214,33 +214,27 @@ const Navbar = ({
           onMouseEnter={() => setShowSubmenu(true)}
           onMouseLeave={() => !submenuPinned && setShowSubmenu(false)}
         >
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(`/mypage/profile?selectedRegionId=${selectedRegionId}`);
-            }}
-            className={styles.submenuLink}
-          >
-            회원정보수정
-          </a>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(`/mypage/classes?selectedRegionId=${selectedRegionId}`);
-            }}
-            className={styles.submenuLink}
-          >
-            수강신청내역
-          </a>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(`/mypage/rentals?selectedRegionId=${selectedRegionId}`);
-            }}
-            className={styles.submenuLink}
-          >
-            대관신청내역
-          </a>
+        <button
+          type="button"
+          onClick={() => navigate(`/mypage/profile?selectedRegionId=${selectedRegionId}`)}
+          className={styles.submenuLink}
+        >
+          회원정보수정
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate(`/mypage/classes?selectedRegionId=${selectedRegionId}`)}
+          className={styles.submenuLink}
+        >
+          수강신청내역
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate(`/mypage/rentals?selectedRegionId=${selectedRegionId}`)}
+          className={styles.submenuLink}
+        >
+          대관신청내역
+        </button>
         </div>
       )}
     </>

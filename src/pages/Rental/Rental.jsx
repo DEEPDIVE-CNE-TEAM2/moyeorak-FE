@@ -193,14 +193,11 @@ const songpaFacilities = [
 
 const Rental = () => {
   const [selectedSport, setSelectedSport] = useState(null);
-  const [selectedRegionId, setSelectedRegionId] = useState(null);
   const [currentFacilities, setCurrentFacilities] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const id = parseInt(localStorage.getItem("selectedRegionId"));
-    setSelectedRegionId(id);
-    console.log("선택된 지역 ID:", selectedRegionId);
 
     if (id === 1) {
       setCurrentFacilities(jungFacilities);
