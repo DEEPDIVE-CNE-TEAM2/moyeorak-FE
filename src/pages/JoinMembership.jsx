@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import styles from "../styles/JoinMembership.module.css";
 
@@ -7,10 +7,11 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FaRegCheckCircle } from "react-icons/fa";
 
 import logo from '../img/아이콘최종.png';
-import { signup, checkEmailDuplicate, checkPhoneDuplicate } from '../Api';
+import { signup, checkEmailDuplicate, checkPhoneDuplicate, getRegionList } from '../Api';
 
 const JoinMembership = () => {
   const navigate = useNavigate();
+  const [regionOptions, setRegionOptions] = useState([]);
 
   const [form, setForm] = useState({
     email: "",
@@ -21,7 +22,21 @@ const JoinMembership = () => {
     address: "",
     gender: "",
     phone: "",
+    regionId: "", // 지역 id 저장
   });
+
+  // ✅ 지역 리스트 불러오기
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        const regions = await getRegionList();
+        setRegionOptions(regions);
+      } catch (err) {
+        console.error('지역 불러오기 실패', err);
+      }
+    };
+    fetchRegions(); // ← 호출 빠졌던 부분
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,12 +83,13 @@ const JoinMembership = () => {
     const payload = {
       email: form.email,
       password: form.password,
-      confirmPassword: form.confirmPassword, // ✅ 필드명 맞춤
+      confirmPassword: form.confirmPassword,
       name: form.name,
       birth: form.birth,
       address: form.address,
       gender: genderForApi,
       phone: form.phone,
+      regionId: form.regionId, // ✅ 백엔드로 보낼 지역 ID
     };
 
     console.log("회원가입 요청 데이터:", payload);
@@ -82,7 +98,6 @@ const JoinMembership = () => {
       await signup(payload);
       alert("회원가입 성공!");
       navigate('/login');
-      
     } catch (err) {
       console.error("회원가입 에러 전체:", err);
       console.error("서버 응답 데이터:", err.response?.data);
@@ -170,15 +185,20 @@ const JoinMembership = () => {
         />
 
         <label className={styles.label}>주소</label>
-        <input
-          type="text"
-          name="address"
-          placeholder="xx시 xx구"
-          value={form.address}
+        <select
+          name="regionId"
+          value={form.regionId}
           onChange={handleChange}
           className={styles.input}
           required
-        />
+        >
+          <option value="">지역을 선택해주세요</option>
+          {regionOptions.map(region => (
+            <option key={region.id} value={region.id}>
+              {region.name}
+            </option>
+          ))}
+        </select>
 
         <label className={styles.label}>성별</label>
         <div className={styles.genderWrapper}>
