@@ -20,8 +20,7 @@ const sportOptions = [
 
 const statusOptions = ['접수 중', '접수 마감'];
 
-const SelectPanel = () => {
-  const [selectedSport, setSelectedSport] = useState(null);
+const SelectPanel = ({ selectedSport, setSelectedSport }) => {
   const [selectedStatus, setSelectedStatus] = useState(null);
 
   const toggleSelect = (value, selectedValue, setter) => {
@@ -71,7 +70,7 @@ const SelectPanel = () => {
         </div>
       </div>
 
-      {/* 선택된 항목 출력 - wrapper 밖에 배치 */}
+      {/* 선택된 항목 출력 */}
       {(selectedSport || selectedStatus) && (
         <div className={styles.selectedChips}>
           {selectedSport && (
