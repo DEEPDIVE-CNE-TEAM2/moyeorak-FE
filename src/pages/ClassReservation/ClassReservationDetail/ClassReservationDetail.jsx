@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+//import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate} from 'react-router-dom';
 import Navbar from '../../../components/Navbar/Navbar';
 import styles from './ClassReservationDetail.module.css';
 
 const ClassReservationDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
+  //const location = useLocation();
 
   const dummyData = {
     1: {
