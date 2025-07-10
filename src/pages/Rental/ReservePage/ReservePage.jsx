@@ -4,21 +4,25 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import styles from "./ReservePage.module.css";
 import facilityData from "./facilityInfo.json";
 import Navbar from "../../../components/Navbar/Navbar";
+import { createRentalApplication } from "../../../Api";
 
 const ReservePage = () => {
   const { id } = useParams();
   const facility = facilityData[id];
+  console.log("ReservePage.jsx: id:", id, "facility:", facility);
+
+
   const navigate = useNavigate();
   const today = new Date();
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimes, setSelectedTimes] = useState([]);
-  const [people, setPeople] = useState(0);
+  const [people, setPeople] = useState(1);
   const [disabledTimes, setDisabledTimes] = useState([]);
 
   const disabledDates = facility?.reservedDates || [];
-  const maxPeople = facility?.maxPeople || 0;
+  const maxPeople = facility?.capacity ?? 10; // capacity로 변경
 
   // 한국 시간 기준 날짜 문자열 반환 (YYYY-MM-DD)
   const getKoreanDateString = (date) => {
@@ -32,7 +36,6 @@ const ReservePage = () => {
     } else {
       setDisabledTimes([]);
     }
-
   }, [selectedDate, facility]);
 
   const handleMonthChange = (diff) => {
@@ -85,14 +88,19 @@ const ReservePage = () => {
     }
   };
 
-  const handleApplyClick = () => {
+  const handleApplyClick = async () => {
     if (!selectedDate || selectedTimes.length === 0 || people === 0) {
       alert("날짜, 시간, 인원을 모두 선택해주세요.");
       return;
     }
 
+    if (!facility) {
+      alert("시설 정보를 불러올 수 없습니다.");
+      return;
+    }
+
     const confirmMsg = `
-시설명: ${facility.name}
+시설명: ${facility.location}
 주소: ${facility.address || "주소 정보 없음"}
 이용 날짜: ${selectedDate.toLocaleDateString()}
 이용 시간: ${selectedTimes.join(", ")}
@@ -101,8 +109,23 @@ const ReservePage = () => {
     `;
 
     if (window.confirm(confirmMsg)) {
-      alert("신청되었습니다.");
-      navigate(`/rental`);
+      try {
+        const formattedDate = getKoreanDateString(selectedDate);
+
+        await createRentalApplication({
+          rentalId: facility.id,
+          requestedDate: formattedDate,
+          requestedTime: `${selectedTimes[0]} ~ ${selectedTimes[selectedTimes.length - 1]}`,
+          note: "", // 필요 시 사용자 입력 연결 가능
+          peopleCount: people,
+        });
+
+        alert("신청되었습니다.");
+        navigate(`/rental`);
+      } catch (error) {
+        alert("신청 중 오류가 발생했습니다. 다시 시도해주세요.");
+        console.error(error);
+      }
     }
   };
 
@@ -114,7 +137,7 @@ const ReservePage = () => {
     <>
       <Navbar />
       <div className={styles.container}>
-        <h2 className={styles.title}>{facility?.name}</h2>
+        <h2 className={styles.title}>{facility?.location || "시설 정보 없음"}</h2>
         <div className={styles.content}>
           <div className={styles.calendarBox}>
             <div className={styles.calendarHeader}>

@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../../../Api'; // Api 경로에 맞게 조정 필요
 import styles from './Userform.module.css';
 import { getUserInfo } from '../../../Api'; // 경로는 네 프로젝트에 맞게 조정
 
 const ProfileForm = () => {
   const [name, setName] = useState('');
+<<<<<<< Updated upstream
   const [gender, setGender] = useState(''); // '남' 또는 '여'
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+=======
+  const [gender, setGender] = useState('남'); // '남' 또는 '여'
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+>>>>>>> Stashed changes
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,9 +24,21 @@ const ProfileForm = () => {
       try {
         const data = await getUserInfo();
         setName(data.name || '');
+<<<<<<< Updated upstream
         setEmail(data.email || '');
         setPhone(data.phone || '');
         setGender(data.gender === 'MALE' ? '남' : '여');
+=======
+
+        // API gender 값 "MALE"/"FEMALE" → '남'/'여' 변환
+        if (data.gender === 'MALE') setGender('남');
+        else if (data.gender === 'FEMALE') setGender('여');
+        else setGender('남'); // 기본값
+
+        setPassword(''); // 비밀번호는 보통 안 불러오므로 빈 문자열 유지
+        setEmail(data.email || '');
+        setPhone(data.phone || '');
+>>>>>>> Stashed changes
       } catch (error) {
         console.error('회원 정보 불러오기 실패:', error);
       }
@@ -66,6 +86,7 @@ const ProfileForm = () => {
         <div className={styles.labelRow}>
           <label className={styles.label}>비밀번호</label>
           <button
+            type="button"
             className={styles.editButton}
             onClick={() => navigate('/mypage/profile/password')}
           >
@@ -77,6 +98,10 @@ const ProfileForm = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+<<<<<<< Updated upstream
+=======
+          placeholder="비밀번호 변경 시 입력"
+>>>>>>> Stashed changes
         />
       </div>
 
@@ -84,7 +109,9 @@ const ProfileForm = () => {
       <div className={styles.field}>
         <div className={styles.labelRow}>
           <label className={styles.label}>이메일</label>
-          <button className={styles.editButton}>수정</button>
+          <button type="button" className={styles.editButton}>
+            수정
+          </button>
         </div>
         <input
           className={styles.input}
@@ -99,6 +126,7 @@ const ProfileForm = () => {
         <div className={styles.labelRow}>
           <label className={styles.label}>휴대폰 번호</label>
           <button
+            type="button"
             className={styles.editButton}
             onClick={() => navigate('/mypage/profile/phone')}
           >

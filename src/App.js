@@ -25,24 +25,23 @@ import VerifyPhone from "./pages/VerifyPhone";
 import RentalDetailContainer from './pages/Rental/RentalDetailContainer';
 import ReservePage from './pages/Rental/ReservePage/ReservePage';
 
-
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home/>} />
-        <Route path='/joinMembership' element={<JoinMembership/>} />
-        <Route path='/login' element={<Login/>} />
-        <Route path='/place' element={<Place/>} />
-        <Route path='/classReservation' element={<ClassReservation/>} />
-        <Route path='/classReservation/:id' element={<ClassReservationDetail/>} />
-        <Route path='/classReservation/:id/payment' element={<Payment/>}/>
-        <Route path='/rental' element={<Rental/>} />
-        <Route path='/announcement' element={<Announcement/>} />
-        <Route path="/announcement/:id" element={<AnnouncementDetail />} />
-        <Route path='/mypage/classes' element={<Classes/>} />
-        <Route path='/mypage/profile' element={<Profile/>} />
-        <Route path='/mypage/rentals' element={<Rentals/>} />
+        <Route path='/' element={<Home />} />
+        <Route path='/joinMembership' element={<JoinMembership />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/place' element={<Place />} />
+        <Route path='/classReservation' element={<ClassReservation />} />
+        <Route path='/classReservation/:id' element={<ClassReservationDetail />} />
+        <Route path='/classReservation/:id/payment' element={<Payment />} />
+        <Route path='/rental' element={<Rental />} />
+        <Route path='/announcement' element={<Announcement />} />
+        <Route path='/announcement/:id' element={<AnnouncementDetail />} />
+        <Route path='/mypage/classes' element={<Classes />} />
+        <Route path='/mypage/profile' element={<Profile />} />
+        <Route path='/mypage/rentals' element={<Rentals />} />
         <Route path='/mypage/profile/password' element={<ChangePassword />} />
         <Route path='/mypage/profile/phone' element={<ChangePhoneNumber />} />
         <Route path='/mypage/profile/withdraw' element={<WithdrawAccount />} />
@@ -51,14 +50,11 @@ const App = () => {
         <Route path='/seongdong' element={<Seongdong />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-phone" element={<VerifyPhone />} />
-        <Route path="/rental/detail/:id" element={<RentalDetailContainer />} />
-        <Route path="/rental/reserve/:id" element={<ReservePage />} />
-        
 
-        
-        <Route path="/jung/:rentalId" element={<RentalDetailContainer />} />
-        <Route path="/seongdong/:rentalId" element={<RentalDetailContainer />} />
-        <Route path="/songpa/:rentalId" element={<RentalDetailContainer />} />
+        {/* 대관 상세 및 예약 경로 */}
+        <Route path="/:district/rental/detail/:id" element={<RentalDetailContainer />} />
+        <Route path="/:district/rental/reserve/:id" element={<ReservePage />} />
+        <Route path="/:district/:id" element={<RentalDetailContainer />} />
 
       </Routes>
     </BrowserRouter>

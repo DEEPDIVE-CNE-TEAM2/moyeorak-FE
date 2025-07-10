@@ -2,14 +2,16 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-
 // Access Token 저장 및 가져오기 헬퍼 함수
 export const setAccessToken = (token) => {
   localStorage.setItem("accessToken", token);
 };
 
 export const getAccessToken = () => {
-  return localStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
+  if (!token) return null;
+  // 'Bearer ' 접두사 제거
+  return token.startsWith('Bearer ') ? token.slice(7) : token;
 };
 
 export const setRefreshToken = (token) => {
@@ -27,6 +29,18 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// 요청 인터셉터 - 모든 요청에 accessToken 자동 포함
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // 응답에서 401 오류가 발생하면 리프레시 토큰을 이용해 재시도하는 인터셉터
 apiClient.interceptors.response.use(
@@ -136,7 +150,11 @@ export const login = async (email, password) => {
     const response = await apiClient.post('/api/users/login', { email, password });
 
     if (response.data.accessToken) {
-      setAccessToken(response.data.accessToken);
+      // 저장 시점에서 'Bearer ' 제거 (있으면)
+      const token = response.data.accessToken.startsWith('Bearer ')
+        ? response.data.accessToken.slice(7)
+        : response.data.accessToken;
+      setAccessToken(token);
     }
     if (response.data.refreshToken) {
       setRefreshToken(response.data.refreshToken);
@@ -162,10 +180,22 @@ export const getRegionList = async () => {
 // 내 정보 조회
 export const getUserInfo = async () => {
   try {
+    // apiClient가 자동으로 Authorization 헤더를 넣음
+    const response = await apiClient.get('/api/users/me');
+    return response.data; // 사용자 정보 데이터
+  } catch (error) {
+    console.error('내 정보 조회 실패:', error);
+    throw error;
+  }
+};
+
+/*
+export const getUserInfo = async () => {
+  try {
     const token = getAccessToken();
     const response = await apiClient.get('/api/users/me', {
       headers: {
-        Authorization: `${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
@@ -173,27 +203,20 @@ export const getUserInfo = async () => {
     throw error;
   }
 };
+*/
 
 // 비밀번호 확인
 export const verifyPassword = async (password) => {
   try {
-    const token = getAccessToken();
-    const response = await apiClient.post(
-      '/api/users/verify-password',
-      { password },
-      {
-        headers: {
-          Authorization: `${token}`,
-        },
-      }
-    );
-    return response.data; // { matched: true } 형태
+    const response = await apiClient.post(`/api/users/verify-password`, {
+      password,
+    });
+    return response.data;
   } catch (error) {
+    console.error("비밀번호 확인 실패:", error);
     throw error;
   }
 };
-
-
 
 // 대관신청
 export const getRentalFacilitiesByRegion = async (regionId) => {
@@ -206,23 +229,40 @@ export const getRentalFacilitiesByRegion = async (regionId) => {
   }
 };
 
-export const createRentalApplication = async (data) => {
+// 대관 신청 API (POST)
+export const createRentalApplication = async ({
+  rentalId,
+  requestedDate,
+  requestedStartTime,
+  requestedEndTime,
+  note,
+  peopleCount,
+}) => {
   try {
-    const response = await axios.post(`${BASE_URL}/api/rental-applications`, data);
+    const response = await apiClient.post('/api/rental-applications', {
+      rentalId,
+      requestedDate,
+      requestedStartTime,
+      requestedEndTime,
+      note,
+      peopleCount,
+    });
     return response.data;
   } catch (error) {
-    console.error("대관 신청 실패:", error);
+    console.error('대관 신청 실패:', error.response?.data || error.message);
     throw error;
   }
+  
 };
 
 // 대관신청 상세화면
 export const fetchRentalDetail = async (regionId, rentalId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/${regionId}/${rentalId}`);
-    return response.data; // API가 반환하는 시설 상세 데이터
+    const response = await axios.get(`${BASE_URL}/api/rentals/region/${regionId}/${rentalId}`);
+    return response.data;
   } catch (error) {
     console.error("대관 상세 API 호출 실패:", error);
     throw error;
   }
+  console.log(`[DEBUG] 요청 URL: ${BASE_URL}/api/rentals/region/${regionId}/${rentalId}`);
 };

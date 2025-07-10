@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import styles from './PasswordCheck.module.css';
 import { verifyPassword } from '../../../Api'; 
@@ -17,6 +18,22 @@ const PasswordCheck = ({ onVerify }) => {
     } catch (err) {
       setError('비밀번호 확인 중 오류가 발생했습니다.');
       console.error(err);
+=======
+import { useState } from "react";
+import { verifyPassword } from "../../../Api"; // 경로는 실제 경로에 맞게 수정
+import styles from './PasswordCheck.module.css';
+
+const PasswordCheck = ({ onVerify }) => {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleVerify = async () => {
+    try {
+      await verifyPassword(password); // API 호출
+      onVerify(); // 성공 시 부모 컴포넌트로 알림
+    } catch (err) {
+      setError("비밀번호가 올바르지 않습니다.");
+>>>>>>> Stashed changes
     }
   };
 
@@ -33,10 +50,17 @@ const PasswordCheck = ({ onVerify }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+<<<<<<< Updated upstream
       {error && <div className={styles.errorMessage}>{error}</div>}
       <button className={styles.submitButton} onClick={handleVerify}>
         확인
       </button>
+=======
+      <button className={styles.submitButton} onClick={handleVerify}>
+        확인
+      </button>
+      {error && <div className={styles.error}>{error}</div>}
+>>>>>>> Stashed changes
     </div>
   );
 };
