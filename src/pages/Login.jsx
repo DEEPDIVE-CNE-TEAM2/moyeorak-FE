@@ -25,6 +25,7 @@ const handleSubmit = async (e) => {
     // 1. 로그인 시도
     const response = await login(form.email, form.password);
 
+    console.log("로그인 응답 전체:", response);
     console.log("로그인 응답 accessToken:", getAccessToken());
 
     // 2. 로그인 성공 후 accessToken 저장됨

@@ -57,7 +57,7 @@ const RentalDetailContainer = () => {
     };
 
     fetchData();
-  }, [id, district]);
+  }, [id, district,  regionId]);
 
   if (error) {
     return <div>{error}</div>;

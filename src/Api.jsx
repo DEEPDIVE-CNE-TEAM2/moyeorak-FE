@@ -258,11 +258,12 @@ export const createRentalApplication = async ({
 // 대관신청 상세화면
 export const fetchRentalDetail = async (regionId, rentalId) => {
   try {
+    console.log(`[DEBUG] 요청 URL: ${BASE_URL}/api/rentals/region/${regionId}/${rentalId}`);
     const response = await axios.get(`${BASE_URL}/api/rentals/region/${regionId}/${rentalId}`);
     return response.data;
   } catch (error) {
     console.error("대관 상세 API 호출 실패:", error);
     throw error;
   }
-  console.log(`[DEBUG] 요청 URL: ${BASE_URL}/api/rentals/region/${regionId}/${rentalId}`);
 };
+
