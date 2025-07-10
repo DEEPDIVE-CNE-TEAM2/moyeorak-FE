@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserInfo } from '../../../Api'; // Api 경로에 맞게 조정 필요
 import styles from './Userform.module.css';
-import { getUserInfo } from '../../../Api'; // 경로는 네 프로젝트에 맞게 조정
 
 const ProfileForm = () => {
   const [name, setName] = useState('');
