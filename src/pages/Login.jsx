@@ -34,6 +34,7 @@ const Login = () => {
 
       console.log("서버 regionId:", serverRegionId);
       console.log("로컬 regionId:", localRegionId);
+      
 
       if (serverRegionId === localRegionId) {
         alert("로그인 성공!");

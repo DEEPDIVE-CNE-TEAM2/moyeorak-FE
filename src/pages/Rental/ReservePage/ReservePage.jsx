@@ -92,11 +92,13 @@ const ReservePage = () => {
     }
 
     const confirmMsg = `
+[신청 정보 확인]
 시설명: ${facility.name}
 주소: ${facility.address || "주소 정보 없음"}
 이용 날짜: ${selectedDate.toLocaleDateString()}
 이용 시간: ${selectedTimes.join(", ")}
 인원: ${people}명
+
 신청하시겠습니까?
     `;
 

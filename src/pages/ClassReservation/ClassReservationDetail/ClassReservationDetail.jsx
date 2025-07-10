@@ -1,32 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+//import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate} from 'react-router-dom';
 import Navbar from '../../../components/Navbar/Navbar';
-import testimg from '../../../img/testimg.jpg';
-import Popupmodal from '../Popupmodal/Popupmodal';
-import Popupmodal2 from '../Popupmodal/Popupmodal2';
 import styles from './ClassReservationDetail.module.css';
 
 const ClassReservationDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const [showModal, setShowModal] = useState(false);
-  const [showModal2, setShowModal2] = useState(false);
-  const [popupData, setPopupData] = useState(null);
+  //const location = useLocation();
 
   const dummyData = {
     1: {
-      imageUrl: testimg,
-      title: '중구보건소 심폐소생술 교육',
+      imageUrl: "/img/어린이축구강습.png",
+      title: '어린이 축구교실',
       details: [
-        '제한없음',                  // 0: 대상
-        '중구보건소 3층 강당',         // 1: 장소
-        '2025.08.01 - 2025.08.10',       // 2: 강의기간
-        '2025.07.01 - 2025.07.31',    // 3: 접수기간
+        '어린이',                  // 0: 대상
+        '손기정 축구장',         // 1: 장소
+        '2025.08.01~2025.08.10',       // 2: 강의기간
+        '2025.07.08~2025.07.31',    // 3: 접수기간
         '이용일 하루 전까지',        // 4: 취소기간
         '관내 36,200 / 관외 40,000', // 5: 요금
-        '20명',                 // 6: 정원
+        '10명',                 // 6: 정원
         '02-123-4567',              // 7: 문의
       ],
     },
@@ -35,14 +28,6 @@ const ClassReservationDetail = () => {
   const data = dummyData[id] || {};
   const infoLabels = ['대상', '장소', '강의기간', '접수기간', '취소기간', '요금', '정원', '문의'];
   const infoValues = data.details || Array(8).fill('-');
-
-  useEffect(() => {
-    if (location.state?.showPopup2 && location.state.popupData) {
-      setPopupData(location.state.popupData);
-      setShowModal2(true);
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
 
   return (
     <>
@@ -66,7 +51,27 @@ const ClassReservationDetail = () => {
             </table>
 
             <div className={styles.buttonGroup}>
-              <button className={styles.applyBtn} onClick={() => setShowModal(true)}>신청하기</button>
+              <button
+                className={styles.applyBtn}
+                onClick={() => {
+                  const confirmMsg = `
+[신청 정보 확인]
+강의: ${data.title}
+장소: ${data.details?.[1] || '-'}
+강의기간: ${data.details?.[2] || '-'}
+수강료: ${data.details?.[5] || '-'}
+
+위 내용으로 신청하시겠습니까?
+                  `.trim();
+
+                  if (window.confirm(confirmMsg)) {
+                    alert("신청되었습니다.");
+                    navigate("/ClassReservation"); // 목록으로 이동
+                  }
+                }}
+              >
+                신청하기
+              </button>
               <button className={styles.backBtn} onClick={() => navigate(-1)}>목록보기</button>
             </div>
           </div>
@@ -83,7 +88,6 @@ const ClassReservationDetail = () => {
 
           <h3>주의사항</h3>
           <p>
-            • 토,일 중복 신청 불가<br />
             • 환불 기준은 아래와 같습니다
           </p>
 
@@ -107,27 +111,6 @@ const ClassReservationDetail = () => {
           </table>
         </div>
       </div>
-
-      {showModal && (
-        <Popupmodal
-          onClose={() => setShowModal(false)}
-          id={id}
-          data={{
-            title: data.title,
-            center: data.details?.[1] || '', // 장소
-            period: '',                      // 필요 시 수업기간 추가 가능
-            time: '매주 토/일 오전',
-            price: data.details?.[5],
-          }}
-        />
-      )}
-
-      {showModal2 && popupData && (
-        <Popupmodal2
-          onClose={() => setShowModal2(false)}
-          data={popupData}
-        />
-      )}
     </>
   );
 };
