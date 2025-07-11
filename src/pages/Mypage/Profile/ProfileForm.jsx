@@ -98,27 +98,6 @@ const ProfileForm = () => {
         </div>
       </div>
 
-      {/* 비밀번호 */}
-      <div className={styles.field}>
-        <div className={styles.labelRow}>
-          <label className={styles.label}>비밀번호</label>
-          <button
-            type="button"
-            className={styles.editButton}
-            onClick={() => navigate('/mypage/profile/password')}
-          >
-            수정
-          </button>
-        </div>
-        <input
-          className={styles.input}
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호 변경 시 입력"
-        />
-      </div>
-
       {/* 이메일 */}
       <div className={styles.field}>
         <div className={styles.labelRow}>
@@ -158,6 +137,14 @@ const ProfileForm = () => {
       <button className={styles.submitButton} onClick={handleSubmit}>
         확인
       </button>
+
+      {/* 비밀번호변경 */}
+      <div
+        className={styles.withdraw}
+        onClick={() => navigate('/mypage/profile/password')}
+      >
+        비밀번호변경
+      </div>
 
       <div
         className={styles.withdraw}
