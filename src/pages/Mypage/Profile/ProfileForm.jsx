@@ -6,7 +6,7 @@ import styles from './Userform.module.css';
 const ProfileForm = () => {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('남'); // 
-  const [password, setPassword] = useState('');
+  //const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const ProfileForm = () => {
         else if (data.gender === 'FEMALE') setGender('여');
         else setGender('남'); // 기본값
 
-        setPassword(''); 
+        //setPassword(''); 
         setEmail(data.email || '');
         setPhone(data.phone || '');
       } catch (error) {
