@@ -232,6 +232,23 @@ export const verifyPassword = async (password) => {
   }
 };
 
+// 회원 탈퇴
+export const deleteUser = async (password, confirmPassword) => {
+  try {
+    const response = await apiClient.delete('/api/users/delete', {
+      data: {
+        password,
+        confirmPassword,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('회원 탈퇴 실패:', error);
+    throw error;
+  }
+};
+
+
 // 대관신청
 export const getRentalFacilitiesByRegion = async (regionId) => {
   try {

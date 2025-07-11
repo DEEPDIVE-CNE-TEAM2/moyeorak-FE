@@ -1,20 +1,33 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar/Navbar.jsx';
 import PopupModal2 from '../../../components/Popupmodal2/PopupModal2.jsx';
+import { deleteUser } from '../../../Api.jsx';
 import styles from './Userform.module.css';
 
 const WithdrawAccount = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     if (currentPassword !== confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
-
     setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteUser(currentPassword, confirmPassword);
+      alert('회원 탈퇴가 완료되었습니다.');
+      navigate('/'); 
+    } catch (error) {
+      alert('회원 탈퇴에 실패했습니다.');
+      console.error(error);
+    }
   };
 
   return (
@@ -59,8 +72,8 @@ const WithdrawAccount = () => {
       {showModal && (
         <PopupModal2
           title="회원탈퇴"
-          content="회원 탈퇴하시겠습니까?"
-          redirectPath="/"
+          content="정말 탈퇴하시겠습니까?"
+          onConfirm={handleConfirmDelete}
           onClose={() => setShowModal(false)}
         />
       )}
