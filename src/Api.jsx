@@ -200,6 +200,21 @@ export const updateUserInfo = async (userData) => {
   }
 };
 
+// 비밀번호 변경
+export const changePassword = async ({ currentPassword, newPassword, confirmNewPassword }) => {
+  try {
+    const response = await apiClient.put('/api/users/password', {
+      currentPassword,
+      newPassword,
+      confirmNewPassword
+    });
+    return response.data;
+  } catch (error) {
+    console.error('비밀번호 변경 실패:', error);
+    throw error;
+  }
+};
+
 
 /*
 export const getUserInfo = async () => {
@@ -223,6 +238,10 @@ export const verifyPassword = async (password) => {
     const response = await apiClient.post(`/api/users/verify-password`, {
       password,
     });
+
+    console.log("verifyPassword 응답:", response);
+    console.log("verifyPassword 응답 data:", response.data);
+
     return response.data;
   } catch (error) {
     console.error("비밀번호 확인 실패:", error);

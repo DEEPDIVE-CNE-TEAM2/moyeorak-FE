@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { verifyPassword } from "../../../Api"; // 경로는 실제 경로에 맞게 수정
+import { verifyPassword } from "../../../Api";
 import styles from './PasswordCheck.module.css';
 
 const PasswordCheck = ({ onVerify }) => {
@@ -8,10 +8,17 @@ const PasswordCheck = ({ onVerify }) => {
 
   const handleVerify = async () => {
     try {
-      await verifyPassword(password); // API 호출
-      onVerify(); // 성공 시 부모 컴포넌트로 알림
+      const result = await verifyPassword(password);
+      console.log("인증 결과:", result);
+
+      if (result.matched) {
+        onVerify(); // 인증 성공 시 부모에 알림
+      } else {
+        setError("비밀번호가 올바르지 않습니다.");
+      }
     } catch (err) {
-      setError("비밀번호가 올바르지 않습니다.");
+      console.error("인증 실패:", err);
+      setError("서버 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -26,7 +33,10 @@ const PasswordCheck = ({ onVerify }) => {
         type="password"
         className={styles.passwordInput}
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          setError("");
+        }}
       />
       <button className={styles.submitButton} onClick={handleVerify}>
         확인

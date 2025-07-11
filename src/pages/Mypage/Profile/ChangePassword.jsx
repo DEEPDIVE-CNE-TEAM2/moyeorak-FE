@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-
+import { changePassword } from '../../../Api'; // ✅ changePassword import
 import Navbar from '../../../components/Navbar/Navbar.jsx';
-//import styles from './ChangePassword.module.css';
 import styles from './Userform.module.css';
 import lock from '../../../img/ic_outline-lock-person.svg';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
-
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,24 +18,27 @@ const ChangePassword = () => {
     }
 
     try {
-      // 실제 백엔드 연결 시
-      /*
-      await axios.post('/api/change-password', {
+      await changePassword({
         currentPassword,
         newPassword,
+        confirmNewPassword: confirmPassword,
       });
-      */
 
-      // 임시 성공 처리
-      console.log('가짜 비밀번호 변경 요청 실행됨');
-      setTimeout(() => {
-        alert('비밀번호가 성공적으로 변경되었습니다.');
-        navigate('/mypage/profile');
-      }, 500);
-
+      alert('비밀번호가 성공적으로 변경되었습니다.');
+      navigate('/mypage/profile');
     } catch (error) {
       console.error(error);
-      alert('비밀번호 변경에 실패했습니다.');
+
+      if (
+        error.response &&
+        error.response.status === 400 &&
+        error.response.data.message &&
+        error.response.data.message.includes('현재 비밀번호')
+      ) {
+        alert('현재 비밀번호가 올바르지 않습니다.');
+      } else {
+        alert('비밀번호 변경에 실패했습니다.');
+      }
     }
   };
 
@@ -85,7 +85,7 @@ const ChangePassword = () => {
           />
         </div>
 
-        {/* 버튼 */}
+        {/* 확인 버튼 */}
         <button className={styles.submitButton} onClick={handleSubmit}>
           확인
         </button>
