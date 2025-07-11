@@ -1,19 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar/Navbar';
 import testimg from '../../../img/testimg.jpg';
-import Popupmodal from '../Popupmodal/Popupmodal';
-import Popupmodal2 from '../Popupmodal/Popupmodal2';
 import styles from './ClassReservationDetail.module.css';
 
 const ClassReservationDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const [showModal, setShowModal] = useState(false);
-  const [showModal2, setShowModal2] = useState(false);
-  const [popupData, setPopupData] = useState(null);
 
   const dummyData = {
     1: {
@@ -35,14 +28,6 @@ const ClassReservationDetail = () => {
   const data = dummyData[id] || {};
   const infoLabels = ['대상', '장소', '강의기간', '접수기간', '취소기간', '요금', '정원', '문의'];
   const infoValues = data.details || Array(8).fill('-');
-
-  useEffect(() => {
-    if (location.state?.showPopup2 && location.state.popupData) {
-      setPopupData(location.state.popupData);
-      setShowModal2(true);
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
 
   return (
     <>
@@ -66,7 +51,27 @@ const ClassReservationDetail = () => {
             </table>
 
             <div className={styles.buttonGroup}>
-              <button className={styles.applyBtn} onClick={() => setShowModal(true)}>신청하기</button>
+              <button
+                className={styles.applyBtn}
+                onClick={() => {
+                  const confirmMessage = `
+강의: ${data.title}
+장소: ${data.details?.[1]}
+강의기간: ${data.details?.[2]}
+수강료: ${data.details?.[5]}
+
+위 내용으로 신청하시겠습니까?
+                  `.trim();
+
+                  const isConfirmed = window.confirm(confirmMessage);
+                  if (isConfirmed) {
+                    alert('신청되었습니다.');
+                    navigate('/classreservation'); // 수강신청 화면으로 이동
+                  }
+                }}
+              >
+                신청하기
+              </button>
               <button className={styles.backBtn} onClick={() => navigate(-1)}>목록보기</button>
             </div>
           </div>
@@ -83,7 +88,6 @@ const ClassReservationDetail = () => {
 
           <h3>주의사항</h3>
           <p>
-            • 토,일 중복 신청 불가<br />
             • 환불 기준은 아래와 같습니다
           </p>
 
@@ -107,27 +111,6 @@ const ClassReservationDetail = () => {
           </table>
         </div>
       </div>
-
-      {showModal && (
-        <Popupmodal
-          onClose={() => setShowModal(false)}
-          id={id}
-          data={{
-            title: data.title,
-            center: data.details?.[1] || '', // 장소
-            period: '',                      // 필요 시 수업기간 추가 가능
-            time: '매주 토/일 오전',
-            price: data.details?.[5],
-          }}
-        />
-      )}
-
-      {showModal2 && popupData && (
-        <Popupmodal2
-          onClose={() => setShowModal2(false)}
-          data={popupData}
-        />
-      )}
     </>
   );
 };

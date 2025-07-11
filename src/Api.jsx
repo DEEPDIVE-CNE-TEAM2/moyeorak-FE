@@ -252,13 +252,15 @@ export const verifyPassword = async (password) => {
 // 대관신청
 export const getRentalFacilitiesByRegion = async (regionId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/rentals/region/${regionId}`);
+    const response = await apiClient.get(`/api/rentals/region/${regionId}`);
     return response.data;
   } catch (error) {
     console.error("대관 시설 정보 가져오기 실패:", error);
     return [];
   }
 };
+
+
 
 // 대관 신청 API (POST)
 export const createRentalApplication = async ({
@@ -297,4 +299,3 @@ export const fetchRentalDetail = async (regionId, rentalId) => {
     throw error;
   }
 };
-

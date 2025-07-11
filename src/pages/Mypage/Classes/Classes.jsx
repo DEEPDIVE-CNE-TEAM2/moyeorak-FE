@@ -3,14 +3,11 @@ import './Classes.css';
 import Navbar from '../../../components/Navbar/Navbar';
 import Search from '../../../img/search.svg';
 import Down from '../../../img/down.svg';
-import Popupmodal from './Popupmodal/Popupmodal';
 
 const Classes = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expandedRowIndex, setExpandedRowIndex] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const originalRows = [
     {
@@ -24,6 +21,7 @@ const Classes = () => {
       price: '23,600원',
       inOrOut: '관내',
       cancelAvailable: '불가',
+      refund: '20,000원',
     },
     {
       period: '2025.05.21 - 2025.06.19',
@@ -67,6 +65,24 @@ const Classes = () => {
       setExpandedRowIndex(null);
     } else {
       setExpandedRowIndex(index);
+    }
+  };
+
+  const handleCancel = (row) => {
+    const confirmMessage = `
+강의: ${row.title}
+기간: ${row.period}
+요일/시간: ${row.schedule}
+결제금액: ${row.price || '-'}
+환불금액: ${row.refund || '-'}
+
+수강 신청을 취소하시겠습니까?
+    `.trim();
+
+    const isConfirmed = window.confirm(confirmMessage);
+    if (isConfirmed) {
+      alert(`${row.title} 수강 신청이 취소되었습니다.`);
+      // 실제 상태 업데이트 또는 API 호출은 여기에 추가 가능
     }
   };
 
@@ -126,10 +142,7 @@ const Classes = () => {
                         <td rowSpan="2" colSpan="2" align="center">
                           <button
                             className="cancel-button"
-                            onClick={() => {
-                              setSelectedRowData(row);
-                              setIsModalOpen(true);
-                            }}
+                            onClick={() => handleCancel(row)}
                           >
                             수강취소
                           </button>
@@ -149,16 +162,6 @@ const Classes = () => {
           </table>
         </div>
       </div>
-
-      {isModalOpen && (
-        <Popupmodal
-          data={selectedRowData}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedRowData(null);
-          }}
-        />
-      )}
     </>
   );
 };

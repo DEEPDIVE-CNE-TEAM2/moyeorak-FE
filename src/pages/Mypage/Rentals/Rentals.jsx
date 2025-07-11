@@ -3,14 +3,11 @@ import '../Classes/Classes.css';
 import Navbar from '../../../components/Navbar/Navbar';
 import Search from '../../../img/search.svg';
 import Down from '../../../img/down.svg';
-import Popupmodal from './Popupmodal';
 
 const Rentals = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expandedRowIndex, setExpandedRowIndex] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const originalRows = [
     {
@@ -67,6 +64,23 @@ const Rentals = () => {
       setExpandedRowIndex(null);
     } else {
       setExpandedRowIndex(index);
+    }
+  };
+
+  const handleCancel = (row) => {
+    const confirmMsg = `
+시설: ${row.facilityType}
+장소: ${row.location}
+사용기간: ${row.period}
+시간: ${row.time}
+
+대관 신청을 취소하시겠습니까?
+    `.trim();
+
+    const isConfirmed = window.confirm(confirmMsg);
+    if (isConfirmed) {
+      alert(`${row.location} 대관 신청이 취소되었습니다.`);
+      // 여기에 실제 취소 처리 로직 추가 가능
     }
   };
 
@@ -128,10 +142,7 @@ const Rentals = () => {
                       <td colSpan="2" align="center">
                         <button
                           className="cancel-button"
-                          onClick={() => {
-                            setSelectedRowData(row);
-                            setIsModalOpen(true);
-                          }}
+                          onClick={() => handleCancel(row)}
                         >
                           대관취소
                         </button>
@@ -144,16 +155,6 @@ const Rentals = () => {
           </table>
         </div>
       </div>
-
-      {isModalOpen && (
-        <Popupmodal
-          data={selectedRowData}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedRowData(null);
-          }}
-        />
-      )}
     </>
   );
 };

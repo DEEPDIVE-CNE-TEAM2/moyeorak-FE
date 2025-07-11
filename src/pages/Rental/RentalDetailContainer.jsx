@@ -86,17 +86,17 @@ const RentalDetailContainer = () => {
       />
 
       <RentalDetailPage
-        facilityName={facility.facilityName}
+        facilityName={facility.location}
         imageUrl={facility.imageUrl}
         info={{
-          종목: facility.sports || "-",
-          대관시설: facility.facilityType || "-",
+          종목: facility.category || "-",
+          대관시설: facility.location || "-",
           주소: facility.address || "-",
           운영시간: facility.usageTime || "-",
           접수기간: facility.registrationPeriod || "-",
-          취소기간: facility.cancellationPeriod || "-",
+          취소기간: facility.cancelEndDate || "-",
           정원: `${facility.capacity || 0}명`,
-          문의: facility.phone || "-",
+          문의: facility.contact || "-",
         }}
         notice={facility.notice}
         guide={facility.guide}
