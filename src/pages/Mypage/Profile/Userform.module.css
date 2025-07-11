@@ -114,6 +114,27 @@
   letter-spacing: -0.6px;
 }
 
+.editButton2 {
+  width: 75px;
+  height: 20px;
+  background: #D7D7D7;
+  border: 1px solid #9A9A9A;
+  border-radius: 5px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #212121;
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: -0.6px;
+}
+
 /* 탈퇴하기 버튼 */
 .withdraw {
   color: #898989;
@@ -173,4 +194,17 @@
 .inputWithButton {
   position: relative;
   width: 330px;
+}
+
+.submitButton {
+  margin-top: 20px;
+  width: 358px;
+  height: 40px;
+  border-radius: 5px;
+  background: #3096E6;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  padding: 0 16px;
 }

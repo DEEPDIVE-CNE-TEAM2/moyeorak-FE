@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserInfo } from '../../../Api'; // Api 경로에 맞게 조정 필요
+import { getUserInfo, updateUserInfo, checkEmailDuplicate } from '../../../Api';
 import styles from './Userform.module.css';
 
 const ProfileForm = () => {
   const [name, setName] = useState('');
-  const [gender, setGender] = useState('남'); // '남' 또는 '여'
+  const [gender, setGender] = useState('남'); // 
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -22,7 +22,7 @@ const ProfileForm = () => {
         else if (data.gender === 'FEMALE') setGender('여');
         else setGender('남'); // 기본값
 
-        setPassword(''); // 비밀번호는 보통 안 불러오므로 빈 문자열 유지
+        setPassword(''); 
         setEmail(data.email || '');
         setPhone(data.phone || '');
       } catch (error) {
@@ -32,6 +32,37 @@ const ProfileForm = () => {
 
     fetchUserInfo();
   }, []);
+
+  //회원정보수정
+  const handleSubmit = async () => {
+  try {
+    const payload = {
+      email,
+      name,
+      phone,
+      gender: gender === '남' ? 'MALE' : 'FEMALE',
+    };
+
+    await updateUserInfo(payload);
+    alert('회원 정보가 수정되었습니다.');
+    // 필요시 navigate('/mypage') 등 이동 가능
+  } catch (error) {
+    console.error('회원 정보 수정 실패:', error);
+    alert('회원 정보 수정 중 오류가 발생했습니다.');
+  }
+};
+
+//이메일중복확인
+  const handleCheckEmail = async () => {
+    try {
+      const res = await checkEmailDuplicate(email);
+      alert(res.isDuplicate ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.");
+    } catch (err) {
+      console.error(err);
+      alert("이메일 중복 확인 중 오류가 발생했습니다.");
+    }
+  };
+
 
   return (
     <div className={styles.wrapper}>
@@ -92,8 +123,8 @@ const ProfileForm = () => {
       <div className={styles.field}>
         <div className={styles.labelRow}>
           <label className={styles.label}>이메일</label>
-          <button type="button" className={styles.editButton}>
-            수정
+          <button type="button" className={styles.editButton2} onClick={handleCheckEmail}>
+            중복확인
           </button>
         </div>
         <input
@@ -120,9 +151,13 @@ const ProfileForm = () => {
           className={styles.input}
           type="tel"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          readOnly
         />
       </div>
+
+      <button className={styles.submitButton} onClick={handleSubmit}>
+        확인
+      </button>
 
       <div
         className={styles.withdraw}
