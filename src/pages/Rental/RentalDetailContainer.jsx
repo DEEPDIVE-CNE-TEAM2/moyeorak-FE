@@ -5,7 +5,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import { fetchRentalDetail } from "../../Api";
 
 const RentalDetailContainer = () => {
-  const { id, district } = useParams(); // URL에서 id, district 추출
+  const { id, district } = useParams();
   const navigate = useNavigate();
   const [facility, setFacility] = useState(null);
   const [error, setError] = useState(null);
@@ -16,9 +16,8 @@ const RentalDetailContainer = () => {
     songpa: 3,
   };
 
-  const regionId = regionIdMap[district]; // district → regionId 변환
+  const regionId = regionIdMap[district];
 
-  // 한글 ↔ 영어 매핑
   const districts = ["중구", "성동구", "송파구"];
 
   const districtNameMap = {
@@ -70,13 +69,13 @@ const RentalDetailContainer = () => {
   return (
     <>
       <Navbar
-        selectedDistrict={districtNameMap[district]} // 영어 key → 한글 이름
+        selectedDistrict={districtNameMap[district]}
         onDistrictChange={(d) => {
-          const key = districtKeyMap[d]; // 한글 이름 → 영어 key
+          const key = districtKeyMap[d];
           const path = districtToRentalPath[key];
           if (path) navigate(path);
         }}
-        districts={districts} // ['중구', '성동구', '송파구']
+        districts={districts}
         districtToPath={{
           중구: "jung",
           성동구: "seongdong",

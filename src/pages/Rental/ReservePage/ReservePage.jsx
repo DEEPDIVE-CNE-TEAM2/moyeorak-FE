@@ -2,37 +2,52 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import styles from "./ReservePage.module.css";
-import facilityData from "./facilityInfo.json";
 import Navbar from "../../../components/Navbar/Navbar";
-import { createRentalApplication } from "../../../Api";
+import { fetchRentalDetail, createRentalApplication, getAccessToken } from "../../../Api"; // getAccessToken 추가
 
 const ReservePage = () => {
-  const { id } = useParams();
-  const facility = facilityData[id];
-  console.log("ReservePage.jsx: id:", id, "facility:", facility);
-
-
+  const { id, district } = useParams();
   const navigate = useNavigate();
   const today = new Date();
 
+  const regionIdMap = {
+    jung: 1,
+    seongdong: 2,
+    songpa: 3,
+  };
+  const regionId = regionIdMap[district];
+
+  const [facility, setFacility] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [people, setPeople] = useState(1);
   const [disabledTimes, setDisabledTimes] = useState([]);
 
-  const disabledDates = facility?.reservedDates || [];
-  const maxPeople = facility?.capacity ?? 10; // capacity로 변경
-
-  // 한국 시간 기준 날짜 문자열 반환 (YYYY-MM-DD)
+  // 날짜 문자열 (YYYY-MM-DD) 생성
   const getKoreanDateString = (date) => {
     return date.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
   };
 
+  // 시설 정보 API로 불러오기
   useEffect(() => {
-    if (selectedDate) {
+    const fetchFacility = async () => {
+      try {
+        const data = await fetchRentalDetail(regionId, id);
+        setFacility(data);
+      } catch (error) {
+        console.error("시설 정보 로딩 실패:", error);
+      }
+    };
+
+    if (regionId && id) fetchFacility();
+  }, [regionId, id]);
+
+  // 날짜 선택 시 해당 날짜의 비활성화 시간 업데이트
+  useEffect(() => {
+    if (selectedDate && facility) {
       const dateStr = getKoreanDateString(selectedDate);
-      setDisabledTimes(facility?.reservedTimes?.[dateStr] || []);
+      setDisabledTimes(facility.reservedTimes?.[dateStr] || []);
     } else {
       setDisabledTimes([]);
     }
@@ -60,10 +75,7 @@ const ReservePage = () => {
     const calendar = [];
     let day = new Date(start);
 
-    while (day.getDay() !== 0) {
-      day.setDate(day.getDate() - 1);
-    }
-
+    while (day.getDay() !== 0) day.setDate(day.getDate() - 1);
     while (day <= end || day.getDay() !== 0) {
       calendar.push(new Date(day));
       day.setDate(day.getDate() + 1);
@@ -89,6 +101,14 @@ const ReservePage = () => {
   };
 
   const handleApplyClick = async () => {
+    const token = getAccessToken();
+    console.log("AccessToken (신청 시):", token);
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
     if (!selectedDate || selectedTimes.length === 0 || people === 0) {
       alert("날짜, 시간, 인원을 모두 선택해주세요.");
       return;
@@ -115,13 +135,14 @@ const ReservePage = () => {
         await createRentalApplication({
           rentalId: facility.id,
           requestedDate: formattedDate,
-          requestedTime: `${selectedTimes[0]} ~ ${selectedTimes[selectedTimes.length - 1]}`,
-          note: "", // 필요 시 사용자 입력 연결 가능
+          requestedStartTime: selectedTimes[0],
+          requestedEndTime: selectedTimes[selectedTimes.length - 1],
+          note: "",
           peopleCount: people,
         });
 
         alert("신청되었습니다.");
-        navigate(`/rental`);
+        navigate(`/${district}/rental`);
       } catch (error) {
         alert("신청 중 오류가 발생했습니다. 다시 시도해주세요.");
         console.error(error);
@@ -130,14 +151,19 @@ const ReservePage = () => {
   };
 
   const handleCancelClick = () => {
-    navigate(`/rental`);
+    navigate(`/${district}/rental`);
   };
+
+  if (!facility) return <div className={styles.loading}>시설 정보를 불러오는 중입니다...</div>;
+
+  const disabledDates = facility?.reservedDates || [];
+  const maxPeople = facility?.capacity ?? 10;
 
   return (
     <>
       <Navbar />
       <div className={styles.container}>
-        <h2 className={styles.title}>{facility?.location || "시설 정보 없음"}</h2>
+        <h2 className={styles.title}>{facility.location}</h2>
         <div className={styles.content}>
           <div className={styles.calendarBox}>
             <div className={styles.calendarHeader}>
@@ -161,8 +187,6 @@ const ReservePage = () => {
                 const isSameAsToday = currentOnly.getTime() === todayOnly.getTime();
                 const isPastDate = currentOnly < todayOnly;
                 const isDateDisabled = disabledDates.includes(dateStr);
-
-                // 오늘이라도 reservedDates에 있으면 비활성화
                 const isDisabled = isPastDate || isDateDisabled || (isSameAsToday && isDateDisabled);
                 const isSelected = isSameDate(date, selectedDate);
 
