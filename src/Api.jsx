@@ -248,6 +248,17 @@ export const deleteUser = async (password, confirmPassword) => {
   }
 };
 
+// 지역별 시설 목록 조회 
+export const getRentalFacilitiesByRegionId = async (regionId) => {
+  try {
+    const response = await apiClient.get(`/api/rentals/facilities/region/${regionId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`시설 목록 조회 실패 (regionId: ${regionId}):`, error);
+    return [];
+  }
+};
+
 
 // 대관신청 (GET)
 export const getRentalFacilitiesByRegion = async (regionId) => {
