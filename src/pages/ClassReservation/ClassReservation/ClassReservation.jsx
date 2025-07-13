@@ -26,12 +26,12 @@ const ClassReservation = () => {
     const fetchPrograms = async () => {
       try {
         const programs = await getProgramsByRegion(regionId);
-        console.log("API 응답 데이터:", programs);
+        // console.log("API 응답 데이터:", programs);  // 삭제
 
         const today = new Date();
 
         const formattedData = programs.map((program) => {
-          console.log("프로그램 수강료 확인", program.id, program.in_price, program.out_price, program.fee);
+          // console.log("프로그램 수강료 확인", program.id, program.in_price, program.out_price, program.fee); // 삭제
 
           const inPrice = program.in_price ?? program.inPrice ?? null;
           const outPrice = program.out_price ?? program.outPrice ?? null;
@@ -105,7 +105,7 @@ const ClassReservation = () => {
         />
         <div className={styles.cardGrid}>
           {filteredCards.length === 0 ? (
-            <p>해당 지역에 프로그램이 없습니다.</p>
+            <p>해당 강의 정보가 없습니다.</p>
           ) : filteredCards.length % 2 === 1 ? (
             <>
               {filteredCards.slice(0, -1).map((card) => (

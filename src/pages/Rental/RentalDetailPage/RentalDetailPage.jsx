@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./RentalDetailPage.module.css";
 
 const RentalDetailPage = ({
@@ -8,8 +9,15 @@ const RentalDetailPage = ({
   notice,
   guide,
   onApplyClick,
-  onBackClick,
+  regionId, // 숫자 1, 2, 3 이런 식으로 받는다고 가정
 }) => {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    // regionId에 따라 쿼리파라미터를 포함한 첫 화면 URL로 이동
+    navigate(`/rental?selectedRegionId=${regionId}`);
+  };
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>{facilityName}</h2>
@@ -33,7 +41,7 @@ const RentalDetailPage = ({
             <button className={styles.applyBtn} onClick={onApplyClick}>
               신청하기
             </button>
-            <button className={styles.backBtn} onClick={onBackClick}>
+            <button className={styles.backBtn} onClick={handleBackClick}>
               목록보기
             </button>
           </div>
