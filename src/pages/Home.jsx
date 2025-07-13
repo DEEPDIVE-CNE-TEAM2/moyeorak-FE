@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// src/pages/Home.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import Navbar from '../components/Navbar/Navbar.jsx';
 import PromotionBanner from "../components/PromotionBanner/PromotionBanner";
 import RecommendProgramSection from '../components/RecommendProgramSection/RecommendProgramSection';
+import RecommendProgramListAfterLogin from '../components/RecommendProgramListAfterLogin/RecommendProgramListAfterLogin';
 import PopupModal from '../components/popupmodal/PopupModal';
+
+import { getAccessToken } from "../Api"; // 토큰 가져오는 함수
 
 const districtToPath = {
   "송파구": "songpa",
@@ -15,9 +19,18 @@ const districtToPath = {
 const Home = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [showPopup, setShowPopup] = useState(true);
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // 팝업에서 지역 선택 시 실행
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // location(주소) 변경 시마다 토큰 재확인해서 로그인 상태 갱신
+  useEffect(() => {
+    const token = getAccessToken();
+    setIsLoggedIn(!!token);
+  }, [location]);
+
+  // 팝업에서 지역 선택
   const handleDistrictSelect = (district) => {
     setSelectedDistrict(district);
     setShowPopup(false);
@@ -28,7 +41,7 @@ const Home = () => {
     }
   };
 
-  // 네비바 드롭다운에서 지역 선택 시 실행
+  // 네비바에서 지역 선택
   const handleDistrictChange = (district) => {
     setSelectedDistrict(district);
 
@@ -45,7 +58,13 @@ const Home = () => {
         onDistrictChange={handleDistrictChange} 
       />
       <PromotionBanner />
-      <RecommendProgramSection />
+
+      {isLoggedIn ? (
+        <RecommendProgramListAfterLogin />
+      ) : (
+        <RecommendProgramSection />
+      )}
+
       {showPopup && (
         <PopupModal
           selectedDistrict={selectedDistrict}

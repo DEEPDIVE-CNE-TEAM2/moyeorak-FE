@@ -1,4 +1,3 @@
-// components/Card/Card.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Card.module.css";
@@ -8,7 +7,7 @@ import icon2 from "../../../../img/PocketWatch.svg";
 import icon3 from "../../../../img/MagneticCard.svg";
 import icon4 from "../../../../img/Person.svg";
 
-const Card = ({ id, imageUrl, title, details }) => {
+const Card = ({ id, imageUrl, title, details, status }) => {
   const labels = ["접수기간", "이용기간", "수강료", "대상"];
   const icons = [icon1, icon2, icon3, icon4];
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const Card = ({ id, imageUrl, title, details }) => {
         className={styles.image}
         style={{ backgroundImage: `url(${imageUrl})` }}
       >
-        <div className={styles.badge}>접수중</div>
+        {status === "접수 중" && <div className={styles.badge}>접수중</div>}
       </div>
 
       <div className={styles.content}>

@@ -33,9 +33,16 @@ const App = () => {
         <Route path='/joinMembership' element={<JoinMembership />} />
         <Route path='/login' element={<Login />} />
         <Route path='/place' element={<Place />} />
+        {/* 쿼리 파라미터로 regionId를 받아서 지역별 프로그램 표시 */}
         <Route path='/classReservation' element={<ClassReservation />} />
+
+        {/* 필요 시 :district 파라미터 포함 경로도 유지 가능 */}
+        <Route path='/:district/classReservation' element={<ClassReservation />} />
+
         <Route path='/classReservation/:id' element={<ClassReservationDetail />} />
-        <Route path='/classReservation/:id/payment' element={<Payment />} />
+        
+        <Route path='/classreservation/payment/:id' element={<Payment />} />
+
         <Route path='/rental' element={<Rental />} />
         <Route path='/announcement' element={<Announcement />} />
         <Route path='/announcement/:id' element={<AnnouncementDetail />} />
@@ -55,7 +62,6 @@ const App = () => {
         <Route path="/:district/rental/detail/:id" element={<RentalDetailContainer />} />
         <Route path="/:district/rental/reserve/:id" element={<ReservePage />} />
         <Route path="/:district/:id" element={<RentalDetailContainer />} />
-
       </Routes>
     </BrowserRouter>
   )

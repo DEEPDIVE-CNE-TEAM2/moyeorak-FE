@@ -20,7 +20,7 @@ const sportOptions = [
   { name: "탁구", icon: <RiPingPongFill size={60} /> },
 ];
 
-// regionId -> regionName 역매핑 객체
+// regionId → 지역 이름 매핑
 const regionNameMap = {
   1: "jung",
   2: "seongdong",
@@ -52,13 +52,13 @@ const Rental = () => {
     setSelectedSport(value === selectedSport ? null : value);
   };
 
-  const filteredFacilities = facilities.filter(
-    (f) => !selectedSport || f.sport === selectedSport
+  // 시설명에 종목명이 포함된 경우 필터링
+  const filteredFacilities = facilities.filter((f) =>
+    !selectedSport || f.location.includes(selectedSport)
   );
 
-  // 현재 지역 이름 얻기
   const regionId = parseInt(localStorage.getItem("selectedRegionId"), 10);
-  const regionName = regionNameMap[regionId] || "jung"; // 기본값 jung
+  const regionName = regionNameMap[regionId] || "jung";
 
   return (
     <>
@@ -103,7 +103,11 @@ const Rental = () => {
               onClick={() => navigate(`/${regionName}/${facility.id}`)}
               style={{ cursor: "pointer" }}
             >
-              <img src={facility.imageUrl} alt={facility.location} className={styles.image} />
+              <img
+                src={facility.imageUrl}
+                alt={facility.location}
+                className={styles.image}
+              />
               <div className={styles.content}>
                 <h3>{facility.location}</h3>
                 <p className={styles.info}>

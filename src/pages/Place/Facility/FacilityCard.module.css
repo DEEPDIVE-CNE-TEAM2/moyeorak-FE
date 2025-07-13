@@ -19,7 +19,7 @@
 }
 
 .info {
-  padding: 0px 30px 12px 45px; /* 위 오른쪽 아래 왼쪽 */
+  padding: 13px 30px 12px 40px; /* 위 오른쪽 아래 왼쪽 */
   flex-grow: 1;
 }
 

@@ -1,20 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getNoticeById } from '../../../Api';
+import { getNoticeById, incrementNoticeViewCount } from '../../../Api';
 import Navbar from '../../../components/Navbar/Navbar';
 import './AnnouncementDetail.css';
 
 const AnnouncementDetail = () => {
-  const { id } = useParams(); // 공지사항 id 추출
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [notice, setNotice] = useState(null);
+  const hasFetched = useRef(false); // 중복 방지 플래그
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const fetchNotice = async () => {
-      const data = await getNoticeById(id);
-      if (data) {
-        setNotice(data);
+      try {
+        // 조회수 1회만 증가
+        await incrementNoticeViewCount(id);
+
+        // 공지사항 데이터 조회
+        const data = await getNoticeById(id);
+        if (data) {
+          setNotice(data);
+        }
+      } catch (error) {
+        console.error("공지사항 조회 중 에러 발생:", error);
       }
     };
 
@@ -23,9 +35,8 @@ const AnnouncementDetail = () => {
 
   if (!notice) return <div>로딩 중...</div>;
 
-  const formatDate = (isoDate) => {
-    return new Date(isoDate).toISOString().split('T')[0].replace(/-/g, '.');
-  };
+  const formatDate = (isoDate) =>
+    new Date(isoDate).toISOString().split('T')[0].replace(/-/g, '.');
 
   return (
     <>

@@ -71,12 +71,18 @@
   align-items: center;
   font-size: 15px;
   color: #555;
+  white-space: nowrap; /* 줄바꿈 방지 */
 }
 
 .icon {
   width: 18px;
   height: 18px;
   margin-right: 8px;
+}
+
+.values .line {
+  white-space: nowrap;
+  word-break: keep-all; /* 한 줄로 유지 */
 }
 
 .buttonWrapper {

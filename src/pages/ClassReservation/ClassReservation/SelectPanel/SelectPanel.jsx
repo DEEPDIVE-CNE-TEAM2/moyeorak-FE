@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './SelectPanel.module.css';
-import deleteIcon from '../../../../img/delete.svg';
 
 import { PiSoccerBallFill } from 'react-icons/pi';
 import { CiBaseball } from 'react-icons/ci';
@@ -20,85 +19,61 @@ const sportOptions = [
 
 const statusOptions = ['접수 중', '접수 마감'];
 
-const SelectPanel = () => {
-  const [selectedSport, setSelectedSport] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState(null);
-
+const SelectPanel = ({
+  selectedSport,
+  setSelectedSport,
+  selectedStatus,
+  setSelectedStatus,
+}) => {
   const toggleSelect = (value, selectedValue, setter) => {
     setter(value === selectedValue ? null : value);
   };
 
   return (
-    <>
-      <div className={styles.wrapper}>
-        {/* 종목 선택 */}
-        <div className={styles.sectionTitle}>종목 선택</div>
-        <div className={styles.sportOptions}>
-          {sportOptions.map((sport, index) => (
+    <div className={styles.wrapper}>
+      {/* 종목 선택 */}
+      <div className={styles.sectionTitle}>종목 선택</div>
+      <div className={styles.sportOptions}>
+        {sportOptions.map((sport, index) => (
+          <div
+            key={index}
+            className={`${styles.sportItem} ${
+              selectedSport === sport.name ? styles.selected : ''
+            }`}
+            onClick={() => toggleSelect(sport.name, selectedSport, setSelectedSport)}
+          >
             <div
-              key={index}
-              className={`${styles.sportItem} ${selectedSport === sport.name ? styles.selected : ''}`}
-              onClick={() => toggleSelect(sport.name, selectedSport, setSelectedSport)}
+              className={styles.sportIcon}
+              style={{ color: selectedSport === sport.name ? '#3096E6' : '#555555' }}
             >
-              <div
-                className={styles.sportIcon}
-                style={{ color: selectedSport === sport.name ? '#3096E6' : '#555555' }}
-              >
-                {sport.icon}
-              </div>
-              <div
-                className={styles.sportLabel}
-                style={{ color: selectedSport === sport.name ? '#3096E6' : '#333' }}
-              >
-                {sport.name}
-              </div>
+              {sport.icon}
             </div>
-          ))}
-        </div>
-
-        {/* 접수 상태 */}
-        <div className={styles.sectionTitle}>접수 상태</div>
-        <div className={styles.statusOptions}>
-          {statusOptions.map((status, index) => (
             <div
-              key={index}
-              className={`${styles.statusItem} ${selectedStatus === status ? styles.selected : ''}`}
-              onClick={() => toggleSelect(status, selectedStatus, setSelectedStatus)}
+              className={styles.sportLabel}
+              style={{ color: selectedSport === sport.name ? '#3096E6' : '#333' }}
             >
-              {status}
+              {sport.name}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
-      {/* 선택된 항목 출력 - wrapper 밖에 배치 */}
-      {(selectedSport || selectedStatus) && (
-        <div className={styles.selectedChips}>
-          {selectedSport && (
-            <div className={styles.chip}>
-              {selectedSport}
-              <img
-                src={deleteIcon}
-                alt="삭제"
-                className={styles.deleteIcon}
-                onClick={() => setSelectedSport(null)}
-              />
-            </div>
-          )}
-          {selectedStatus && (
-            <div className={styles.chip}>
-              {selectedStatus}
-              <img
-                src={deleteIcon}
-                alt="삭제"
-                className={styles.deleteIcon}
-                onClick={() => setSelectedStatus(null)}
-              />
-            </div>
-          )}
-        </div>
-      )}
-    </>
+      {/* 접수 상태 */}
+      <div className={styles.sectionTitle}>접수 상태</div>
+      <div className={styles.statusOptions}>
+        {statusOptions.map((status, index) => (
+          <div
+            key={index}
+            className={`${styles.statusItem} ${
+              selectedStatus === status ? styles.selected : ''
+            }`}
+            onClick={() => toggleSelect(status, selectedStatus, setSelectedStatus)}
+          >
+            {status}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

@@ -261,7 +261,6 @@ export const getRentalFacilitiesByRegionId = async (regionId) => {
   }
 };
 
-
 // 대관신청 (GET)
 export const getRentalFacilitiesByRegion = async (regionId) => {
   try {
@@ -272,8 +271,6 @@ export const getRentalFacilitiesByRegion = async (regionId) => {
     return [];
   }
 };
-
-
 
 // 대관 신청 API (POST)
 export const createRentalApplication = async ({
@@ -335,6 +332,16 @@ export const getNoticeById = async (id) => {
   }
 };
 
+// 공지사항 조회수 증가
+export const incrementNoticeViewCount = async (id) => {
+  try {
+    const response = await apiClient.post(`/api/notices/${id}/view`);
+    return response.data;
+  } catch (error) {
+    console.error(`공지사항 조회수 증가 실패 (id: ${id}):`, error);
+  }
+};
+
 // 내 대관 신청 목록 조회
 export const getMyRentalApplications = async () => {
   try {
@@ -357,7 +364,7 @@ export const cancelRentalApplication = async (applicationId) => {
   }
 };
 
-// 수강신청 목록 조회
+// 마이페이지 수강신청 목록 조회
 export const getMyEnrollments = async () => {
   try {
     const response = await apiClient.get('/api/enrollments/me');
@@ -368,7 +375,7 @@ export const getMyEnrollments = async () => {
   }
 };
 
-// 수강신청 취소
+// 마이페이지 수강신청 취소
 export const cancelEnrollment = async (enrollmentId) => {
   try {
     const response = await apiClient.delete(`/api/enrollments/${enrollmentId}`);
@@ -379,3 +386,39 @@ export const cancelEnrollment = async (enrollmentId) => {
   }
 };
 
+// 수강신청 프로그램 목록 조회 API (GET)
+export const getProgramsByRegion = async (regionId) => {
+  try {
+    const response = await apiClient.get(`/api/programs?regionId=${regionId}`);
+    return response.data;
+  } catch (error) {
+    console.error("수강신청 프로그램 조회 실패:", error);
+    return [];
+  }
+};
+
+// 수강신청 상세화면
+export const getProgramDetail = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/programs/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('프로그램 상세 조회 실패:', error);
+    throw error;
+  }
+};
+
+// 수강신청 API (POST)
+export const enrollProgram = async (enrollmentData) => {
+  const token = localStorage.getItem('accessToken'); 
+  const response = await axios.post(
+    `${BASE_URL}/api/enrollments`,
+    enrollmentData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
