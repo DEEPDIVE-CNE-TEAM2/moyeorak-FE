@@ -19,7 +19,7 @@
 
 .image {
   width: 600px;
-  height: 420px;
+  height: 460px;
   object-fit: cover;
   flex-shrink: 0;
 }

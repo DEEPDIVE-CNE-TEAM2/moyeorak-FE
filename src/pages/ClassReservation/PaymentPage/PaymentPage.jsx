@@ -44,27 +44,37 @@ const PaymentPage = () => {
   };
 
   const handlePayment = async () => {
-    const confirmed = window.confirm('신청되었습니다.');
-
+    const confirmed = window.confirm('신청하시겠습니까?');
     if (!confirmed) return;
 
+    const classTime =
+      program?.classTime?.trim() ||
+      (program?.class_start_time && program?.class_end_time
+        ? `${program.class_start_time.slice(0, 5)} ~ ${program.class_end_time.slice(0, 5)}`
+        : null);
+
+    if (!classTime || !classTime.includes('~')) {
+      alert("강의 시간이 정확히 설정되지 않았습니다. 관리자에게 문의하세요.");
+      return;
+    }
+
+    const enrollmentData = {
+      programTitle: program?.title || '',
+      location: program?.location || '',
+      usagePeriod: program?.usagePeriod || '',
+      classTime: classTime,
+      paidAmount: program?.inPrice ?? program?.in_price ?? 0,
+    };
+
+
     try {
-      const enrollmentData = {
-        programTitle: program?.title,
-        center: program?.location,
-        usagePeriod: program?.usagePeriod,
-        usageTime: program?.time,
-        paidAmount:
-          program?.fee ??
-          program?.in_price ??
-          program?.inPrice ??
-          0,
-      };
-
-      await enrollProgram(enrollmentData);
-
+      const response = await enrollProgram(enrollmentData);
+      console.log('서버 응답:', response);
       alert('신청이 완료되었습니다.');
-      navigate('/classReservation');
+
+      const regionId = program?.regionId || 1; // 기본값 1
+
+      navigate(`/classReservation?selectedRegionId=${regionId}`);
     } catch (error) {
       console.error('신청 실패:', error);
       alert('신청에 실패했습니다. 다시 시도해주세요.');

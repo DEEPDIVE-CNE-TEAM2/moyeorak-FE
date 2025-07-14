@@ -1,51 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Classes.css';
 import Navbar from '../../../components/Navbar/Navbar';
 import Search from '../../../img/search.svg';
 import Down from '../../../img/down.svg';
+import { getMyEnrollments, getProgramDetail, cancelEnrollment } from '../../../Api';
 
 const Classes = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expandedRowIndex, setExpandedRowIndex] = useState(null);
+  const [enrollments, setEnrollments] = useState([]);
 
-  const originalRows = [
-    {
-      period: '2025.05.20 - 2025.06.19',
-      title: '수영 (중급반)',
-      schedule: '월/수/금 17:00~18:00',
-      facility: '구름 실내 수영장',
-      instructor: '김구름',
-      status: '수강중',
-      applyDate: '2025.05.20',
-      price: '23,600원',
-      inOrOut: '관내',
-      cancelAvailable: '불가',
-      refund: '20,000원',
-    },
-    {
-      period: '2025.05.21 - 2025.06.19',
-      title: '수영 (중급반)',
-      schedule: '월/수/금 17:00~18:00',
-      facility: '구름 실내 수영장',
-      instructor: '김구름',
-      status: '취소',
-    },
-    {
-      period: '2025.05.22 - 2025.06.19',
-      title: '수영 (중급반)',
-      schedule: '월/수/금 17:00~18:00',
-      facility: '구름 실내 수영장',
-      instructor: '김구름',
-      status: '종료',
-    },
-  ];
+  useEffect(() => {
+    fetchEnrollments();
+  }, []);
 
-  const sortedRows = [...originalRows].sort((a, b) => {
-    const aDate = new Date(a.period.split(' - ')[0]);
-    const bDate = new Date(b.period.split(' - ')[0]);
-    return sortOrder === 'desc' ? bDate - aDate : aDate - bDate;
-  });
+  const fetchEnrollments = async () => {
+    try {
+      const rawEnrollments = await getMyEnrollments();
+
+      const enriched = await Promise.all(
+        rawEnrollments.map(async (e) => {
+          const program = await getProgramDetail(e.programId);
+
+          let statusText = '';
+          switch (e.status) {
+            case 'enrolled':
+              statusText = '수강중';
+              break;
+            case 'cancelled':
+              statusText = '취소';
+              break;
+            case 'ended':
+              statusText = '종료';
+              break;
+            default:
+              statusText = e.status;
+          }
+
+          return {
+            id: e.id,
+            title: program?.title || '제목 없음',
+            period: program?.usagePeriod?.replace(/~/g, '~').trim() || '-',
+            schedule: program?.classTime || `${e.classStartTime?.slice(0, 5)} ~ ${e.classEndTime?.slice(0, 5)}` || '-',
+            facility: program?.location || '-',
+            instructor: e.instructorName || '-',
+            status: statusText,
+            applyDate: e.enrolledAt?.split('T')[0].replace(/-/g, '.') || '-',
+            price: e.paidAmount ? `${e.paidAmount.toLocaleString()}원` : '-',
+            cancelAvailable: e.status === 'enrolled' ? '가능' : '불가',
+          };
+        })
+      );
+
+      setEnrollments(enriched);
+    } catch (error) {
+      console.error('수강신청 목록 불러오기 실패:', error);
+    }
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -61,14 +73,10 @@ const Classes = () => {
   };
 
   const toggleRow = (index) => {
-    if (expandedRowIndex === index) {
-      setExpandedRowIndex(null);
-    } else {
-      setExpandedRowIndex(index);
-    }
+    setExpandedRowIndex(index === expandedRowIndex ? null : index);
   };
 
-  const handleCancel = (row) => {
+  const handleCancel = async (row) => {
     const confirmMessage = `
 강의: ${row.title}
 기간: ${row.period}
@@ -80,11 +88,23 @@ const Classes = () => {
     `.trim();
 
     const isConfirmed = window.confirm(confirmMessage);
-    if (isConfirmed) {
+    if (!isConfirmed) return;
+
+    try {
+      await cancelEnrollment(row.id);
       alert(`${row.title} 수강 신청이 취소되었습니다.`);
-      // 실제 상태 업데이트 또는 API 호출은 여기에 추가 가능
+      fetchEnrollments(); // 갱신
+    } catch (error) {
+      alert('수강신청 취소 중 오류가 발생했습니다.');
+      console.error(error);
     }
   };
+
+  const sortedRows = [...enrollments].sort((a, b) => {
+    const aDate = new Date(a.period.split(' - ')[0]);
+    const bDate = new Date(b.period.split(' - ')[0]);
+    return sortOrder === 'desc' ? bDate - aDate : aDate - bDate;
+  });
 
   return (
     <>
@@ -138,7 +158,7 @@ const Classes = () => {
                         <td align="center" className="mini-title">신청일</td>
                         <td align="center">{row.applyDate}</td>
                         <td align="center" className="mini-title">관내/관외 여부</td>
-                        <td align="center">{row.inOrOut}</td>
+                        <td align="center">{row.inOrOut || '-'}</td>
                         <td rowSpan="2" colSpan="2" align="center">
                           <button
                             className="cancel-button"

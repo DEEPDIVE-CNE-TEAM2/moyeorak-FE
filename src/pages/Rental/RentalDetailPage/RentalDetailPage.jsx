@@ -9,12 +9,11 @@ const RentalDetailPage = ({
   notice,
   guide,
   onApplyClick,
-  regionId, // 숫자 1, 2, 3 이런 식으로 받는다고 가정
+  regionId,
 }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    // regionId에 따라 쿼리파라미터를 포함한 첫 화면 URL로 이동
     navigate(`/rental?selectedRegionId=${regionId}`);
   };
 

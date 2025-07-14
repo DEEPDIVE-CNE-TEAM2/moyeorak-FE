@@ -12,7 +12,6 @@ const ClassReservationDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 시간 포맷 함수
   const formatTime = (timeStr) => {
     if (!timeStr) return null;
     return timeStr.length >= 5 ? timeStr.slice(0, 5) : timeStr;
@@ -22,7 +21,6 @@ const ClassReservationDetail = () => {
     setLoading(true);
     getProgramDetail(id)
       .then((res) => {
-        console.log('프로그램 상세 데이터:', res);
         setData(res);
         setError(null);
       })
@@ -33,25 +31,28 @@ const ClassReservationDetail = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // 강의기간 + 시간 문자열 생성 (시간값 콘솔 출력)
-  const usageStart = data?.usage_start_date || data?.usageStartDate;
-  const usageEnd = data?.usage_end_date || data?.usageEndDate;
+  const infoLabels = [
+    '대상',
+    '장소',
+    '강의기간',
+    '강의시간',
+    '접수기간',
+    '취소기간',
+    '요금',
+    '정원',
+    '문의',
+  ];
+
+  const usagePeriodDateOnly = data?.usagePeriod
+    ? data.usagePeriod.split('~').map((s) => s.trim()).join(' ~ ')
+    : '-';
 
   const classTime =
-    data?.classTime
-      ? data.classTime
+    data?.classTime && data.classTime.trim() !== ''
+      ? data.classTime.trim()
       : (formatTime(data?.class_start_time) && formatTime(data?.class_end_time))
       ? `${formatTime(data.class_start_time)} ~ ${formatTime(data.class_end_time)}`
-      : null;
-
-  console.log('classTime:', classTime);
-
-  const usagePeriodWithTime =
-    usageStart && usageEnd
-      ? `${usageStart} ~ ${usageEnd}${classTime ? ` (${classTime})` : ''}`
-      : data?.usagePeriod || '-';
-
-  const infoLabels = ['대상', '장소', '강의기간', '접수기간', '취소기간', '요금', '정원', '문의'];
+      : '-';
 
   const feeString = data
     ? (() => {
@@ -75,7 +76,8 @@ const ClassReservationDetail = () => {
     ? [
         data.target || '-',
         data.location || '-',
-        usagePeriodWithTime,
+        usagePeriodDateOnly,
+        classTime,
         data.registrationPeriod || '-',
         data.cancelEndDate || '-',
         feeString,
@@ -121,7 +123,8 @@ const ClassReservationDetail = () => {
 강의: ${data.title}
 장소: ${infoValues[1]}
 강의기간: ${infoValues[2]}
-수강료: ${infoValues[5]}
+강의시간: ${infoValues[3]}
+수강료: ${infoValues[6]}
 
 위 내용으로 신청하시겠습니까?
                   `.trim();
