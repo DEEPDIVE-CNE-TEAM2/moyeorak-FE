@@ -184,13 +184,13 @@ export const fetchRentalDetail = async (regionId, rentalId) => {
   return response.data;
 };
 
-// 내 대관 신청 목록 조회
+// 마이페이지 내 대관 신청 목록 조회
 export const getMyRentalApplications = async () => {
   const response = await apiClient.get('/api/rental-applications/me');
   return response.data;
 };
 
-// 대관신청 취소
+// 마이페이지 대관신청 취소
 export const cancelRentalApplication = async (applicationId) => {
   const response = await apiClient.delete(`/api/rental-applications/${applicationId}`);
   return response.data;
