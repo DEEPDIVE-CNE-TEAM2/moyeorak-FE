@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getNoticeById, incrementNoticeViewCount } from '../../../Api';
+import { getNoticeById } from '../../../Api';
 import Navbar from '../../../components/Navbar/Navbar';
 import './AnnouncementDetail.css';
 
@@ -17,16 +17,12 @@ const AnnouncementDetail = () => {
 
     const fetchNotice = async () => {
       try {
-        // 조회수 1회만 증가
-        await incrementNoticeViewCount(id);
-
-        // 공지사항 데이터 조회
         const data = await getNoticeById(id);
         if (data) {
           setNotice(data);
         }
       } catch (error) {
-        console.error("공지사항 조회 중 에러 발생:", error);
+        console.error("공지사항 조회 중 에러 발생:", error.response || error);
       }
     };
 

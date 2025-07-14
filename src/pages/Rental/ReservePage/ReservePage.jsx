@@ -3,7 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import styles from "./ReservePage.module.css";
 import Navbar from "../../../components/Navbar/Navbar";
-import { fetchRentalDetail, createRentalApplication, getAccessToken } from "../../../Api";
+import {
+  fetchRentalDetail,
+  createRentalApplication,
+  getAccessToken,
+} from "../../../Api";
 
 const ReservePage = () => {
   const { id, district } = useParams();
@@ -23,9 +27,18 @@ const ReservePage = () => {
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [people, setPeople] = useState(1);
   const [disabledTimes, setDisabledTimes] = useState([]);
+  const [disabledDates, setDisabledDates] = useState([]);
 
   const getKoreanDateString = (date) => {
     return date.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+  };
+
+  const parseUsageTimeRange = (usageTimeStr) => {
+    if (!usageTimeStr) return [8, 22]; // 기본 운영 시간
+    const [startStr, endStr] = usageTimeStr.split(" ~ ");
+    const startHour = parseInt(startStr.split(":")[0], 10);
+    const endHour = parseInt(endStr.split(":")[0], 10);
+    return [startHour, endHour];
   };
 
   useEffect(() => {
@@ -42,9 +55,24 @@ const ReservePage = () => {
   }, [regionId, id]);
 
   useEffect(() => {
-    if (selectedDate && facility) {
+    if (!facility || !facility.reservedTimes) return;
+
+    const fullyBookedDates = Object.entries(facility.reservedTimes).reduce((acc, [dateStr, times]) => {
+      const [startHour, endHour] = parseUsageTimeRange(facility.usageTime);
+      const totalAvailableHours = endHour - startHour;
+      if (times.length >= totalAvailableHours) {
+        acc.push(dateStr);
+      }
+      return acc;
+    }, []);
+
+    setDisabledDates(fullyBookedDates);
+  }, [facility]);
+
+  useEffect(() => {
+    if (selectedDate && facility?.reservedTimes) {
       const dateStr = getKoreanDateString(selectedDate);
-      setDisabledTimes(facility.reservedTimes?.[dateStr] || []);
+      setDisabledTimes(facility.reservedTimes[dateStr] || []);
     } else {
       setDisabledTimes([]);
     }
@@ -151,8 +179,8 @@ const ReservePage = () => {
 
   if (!facility) return <div className={styles.loading}>시설 정보를 불러오는 중입니다...</div>;
 
-  const disabledDates = facility?.reservedDates || [];
   const maxPeople = facility?.capacity ?? 10;
+  const [startHour, endHour] = parseUsageTimeRange(facility.usageTime);
 
   return (
     <>
@@ -179,10 +207,9 @@ const ReservePage = () => {
                 const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const currentOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-                const isSameAsToday = currentOnly.getTime() === todayOnly.getTime();
                 const isPastDate = currentOnly < todayOnly;
                 const isDateDisabled = disabledDates.includes(dateStr);
-                const isDisabled = isPastDate || isDateDisabled || (isSameAsToday && isDateDisabled);
+                const isDisabled = isPastDate || isDateDisabled;
                 const isSelected = isSameDate(date, selectedDate);
 
                 return (
@@ -208,7 +235,7 @@ const ReservePage = () => {
                 <div className={styles.section}>
                   <h4 className={styles.sectionTitle}>시간 선택</h4>
                   <div className={styles.timeGrid}>
-                    {Array.from({ length: 15 }, (_, i) => i + 8).map((hour) => {
+                    {Array.from({ length: endHour - startHour }, (_, i) => startHour + i).map((hour) => {
                       const timeStr = `${hour.toString().padStart(2, "0")}:00`;
                       const isDisabled = disabledTimes.includes(timeStr);
                       const isSelected = selectedTimes.includes(timeStr);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserInfo, updateUserInfo, checkEmailDuplicate } from '../../../Api';
 import styles from './Userform.module.css';
 
@@ -9,22 +9,34 @@ const ProfileForm = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [birth, setBirth] = useState('');
+  const [regionName, setRegionName] = useState('');
+  const [regionId, setRegionId] = useState(null);
+
   const [originalData, setOriginalData] = useState(null);
   const [emailChecked, setEmailChecked] = useState(false);
   const [emailDuplicate, setEmailDuplicate] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const data = await getUserInfo();
+
         setName(data.name || '');
-        if (data.gender === 'MALE') setGender('남');
-        else if (data.gender === 'FEMALE') setGender('여');
-        else setGender('남');
+        setGender(data.gender === 'MALE' ? '남' : '여');
         setEmail(data.email || '');
         setPhone(data.phone || '');
         setBirth(data.birth || '');
+
+        if (location.state?.updatedRegion && location.state?.updatedRegionId !== undefined) {
+          setRegionName(location.state.updatedRegion);
+          setRegionId(location.state.updatedRegionId);
+        } else {
+          setRegionName(data.regionName || '');
+          setRegionId(data.regionId || null);
+        }
 
         setOriginalData({
           name: data.name || '',
@@ -32,6 +44,8 @@ const ProfileForm = () => {
           email: data.email || '',
           phone: data.phone || '',
           birth: data.birth || '',
+          regionName: data.regionName || '',
+          regionId: data.regionId || null,
         });
 
         setEmailChecked(true);
@@ -42,7 +56,7 @@ const ProfileForm = () => {
     };
 
     fetchUserInfo();
-  }, []);
+  }, [location.state]);
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -74,69 +88,86 @@ const ProfileForm = () => {
   };
 
   const handleSubmit = async () => {
-  if (!name.trim() || !email.trim() || !phone.trim() || !birth.trim()) {
-    alert('이름, 이메일, 생년월일, 휴대폰 번호는 모두 입력해야 합니다.');
-    return;
-  }
-
-  if (
-    originalData &&
-    name === originalData.name &&
-    gender === originalData.gender &&
-    email === originalData.email &&
-    phone === originalData.phone &&
-    birth === originalData.birth
-  ) {
-    alert('수정된 정보가 없습니다.');
-    return;
-  }
-
-  if (!emailChecked) {
-    alert('이메일 중복 확인이 필요합니다.');
-    return;
-  }
-
-  if (emailDuplicate) {
-    alert('중복된 이메일이므로 다른 이메일을 사용해주세요.');
-    return;
-  }
-
-  try {
-    const payload = {
-      email,
-      name,
-      phone,
-      gender: gender === '남' ? 'MALE' : 'FEMALE',
-      birth,
-    };
-
-    // ✅ 콘솔 확인용 로그 추가
-    console.log('전송될 데이터 확인:', {
-      email,
-      name,
-      phone,
-      gender: gender === '남' ? 'MALE' : 'FEMALE',
-      birth,
-    });
-
-    await updateUserInfo(payload);
-
-    if (email !== originalData.email) {
-      alert('이메일이 변경되어 다시 로그인해야 합니다.');
-      navigate('/login');
+    if (!name.trim() || !email.trim() || !phone.trim() || !birth.trim() || !regionName.trim()) {
+      alert('이름, 이메일, 생년월일, 휴대폰 번호, 주소는 모두 입력해야 합니다.');
       return;
     }
 
-    alert('회원 정보가 수정되었습니다.');
-    setOriginalData({ name, gender, email, phone, birth });
-    setEmailChecked(true);
-    setEmailDuplicate(false);
-  } catch (error) {
-    console.error('회원 정보 수정 실패:', error);
-    alert('회원 정보 수정 중 오류가 발생했습니다.');
-  }
-};
+    if (
+      originalData &&
+      name === originalData.name &&
+      gender === originalData.gender &&
+      email === originalData.email &&
+      phone === originalData.phone &&
+      birth === originalData.birth &&
+      regionName === originalData.regionName &&
+      regionId === originalData.regionId
+    ) {
+      alert('수정된 정보가 없습니다.');
+      return;
+    }
 
+    if (!emailChecked) {
+      alert('이메일 중복 확인이 필요합니다.');
+      return;
+    }
+
+    if (emailDuplicate) {
+      alert('중복된 이메일이므로 다른 이메일을 사용해주세요.');
+      return;
+    }
+
+    try {
+      const payload = {
+        email,
+        name,
+        phone,
+        gender: gender === '남' ? 'MALE' : 'FEMALE',
+        birth,
+        regionName,
+        regionId,
+      };
+
+      console.log('전송될 데이터 확인:', payload);
+
+      await updateUserInfo(payload); // 서버로 정보 전송
+
+      // ✅ 최신 regionId 재확인
+      const updated = await getUserInfo();
+      console.log('수정 후 최신 사용자 정보:', updated);
+
+      // ✅ 예시: 최신 regionId를 localStorage에 저장
+      localStorage.setItem('regionId', updated.regionId);
+
+      if (email !== originalData.email) {
+        alert('이메일이 변경되어 다시 로그인해야 합니다.');
+        navigate('/login');
+        return;
+      }
+
+      alert('회원 정보가 수정되었습니다.');
+      setOriginalData({
+        name,
+        gender,
+        email,
+        phone,
+        birth,
+        regionName,
+        regionId,
+      });
+      setEmailChecked(true);
+      setEmailDuplicate(false);
+    } catch (error) {
+      console.error('회원 정보 수정 실패:', error);
+      alert('회원 정보 수정 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleRegionEditClick = () => {
+    navigate('/mypage/profile/Region', {
+      state: { currentRegion: regionName },
+    });
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -191,12 +222,7 @@ const ProfileForm = () => {
             중복확인
           </button>
         </div>
-        <input
-          className={styles.input}
-          type="email"
-          value={email}
-          onChange={onEmailChange}
-        />
+        <input className={styles.input} type="email" value={email} onChange={onEmailChange} />
       </div>
 
       {/* 휴대폰 번호 */}
@@ -214,16 +240,35 @@ const ProfileForm = () => {
         <input className={styles.input} type="tel" value={phone} readOnly />
       </div>
 
+      {/* 주소 */}
+      <div className={styles.field}>
+        <div className={styles.labelRow}>
+          <label className={styles.label}>주소</label>
+          <button type="button" className={styles.editButton} onClick={handleRegionEditClick}>
+            수정
+          </button>
+        </div>
+        <input
+          className={styles.input}
+          type="text"
+          value={regionName}
+          readOnly
+          style={{
+            backgroundColor: regionName ? '#fff' : '#f5f5f5',
+            cursor: 'default',
+          }}
+          placeholder="주소가 없습니다."
+        />
+      </div>
+
       <button className={styles.submitButton} onClick={handleSubmit}>
         확인
       </button>
 
-      {/* 비밀번호변경 */}
       <div className={styles.withdraw} onClick={() => navigate('/mypage/profile/password')}>
         비밀번호변경
       </div>
 
-      {/* 탈퇴하기 */}
       <div className={styles.withdraw} onClick={() => navigate('/mypage/profile/withdraw')}>
         탈퇴하기
       </div>

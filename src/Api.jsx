@@ -240,12 +240,6 @@ export const getNoticeById = async (id) => {
   return response.data;
 };
 
-// 공지사항 조회수 증가
-export const incrementNoticeViewCount = async (id) => {
-  const response = await apiClient.post(`/api/notices/${id}/view`);
-  return response.data;
-};
-
 // 수강신청 프로그램 목록 조회 API (GET)
 export const getProgramsByRegion = async (regionId) => {
   try {

@@ -1,15 +1,12 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar/Navbar.jsx';
-import PopupModal2 from '../../../components/Popupmodal2/PopupModal2.jsx';
 import styles from './Userform.module.css';
 
 const ChangePhoneNumber = () => {
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleVerifyClick = () => {
-    setShowModal(true);
+    alert('번호인증이 완료되었습니다.');
   };
 
   const handleSubmit = () => {
@@ -19,7 +16,6 @@ const ChangePhoneNumber = () => {
   return (
     <>
       <Navbar />
-
       <div className={styles.wrapper}>
         {/* 타이틀 */}
         <div className={styles.titleWrapper}>
@@ -48,18 +44,8 @@ const ChangePhoneNumber = () => {
           확인
         </button>
       </div>
-
-      {/* 팝업 모달 */}
-      {showModal && (
-        <PopupModal2
-          title="번호인증"
-          content="번호인증이 완료됨"
-          onClose={() => setShowModal(false)} // 단순히 모달 닫기만
-        />
-      )}
     </>
   );
 };
 
 export default ChangePhoneNumber;
-

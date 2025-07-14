@@ -16,6 +16,7 @@ import Profile from './pages/Mypage/Profile/Profile'
 import Rentals from './pages/Mypage/Rentals/Rentals'
 import ChangePassword from './pages/Mypage/Profile/ChangePassword'
 import ChangePhoneNumber from './pages/Mypage/Profile/ChangePhoneNumber'
+import ChangeRegion from './pages/Mypage/Profile/ChangeRegion'
 import WithdrawAccount from './pages/Mypage/Profile/WithdrawAccount'
 import Songpa from './pages/Area/Songpa';
 import Jung from './pages/Area/Jung';
@@ -51,6 +52,7 @@ const App = () => {
         <Route path='/mypage/rentals' element={<Rentals />} />
         <Route path='/mypage/profile/password' element={<ChangePassword />} />
         <Route path='/mypage/profile/phone' element={<ChangePhoneNumber />} />
+        <Route path='/mypage/profile/Region' element={<ChangeRegion />} />
         <Route path='/mypage/profile/withdraw' element={<WithdrawAccount />} />
         <Route path='/songpa' element={<Songpa />} />
         <Route path='/jung' element={<Jung />} />
