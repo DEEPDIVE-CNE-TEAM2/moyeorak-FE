@@ -28,18 +28,12 @@ const PaymentPage = () => {
   }, [id]);
 
   const formatFee = (data) => {
-    const inPrice = data?.in_price ?? data?.inPrice ?? null;
-    const outPrice = data?.out_price ?? data?.outPrice ?? null;
-    const oldFee = data?.fee ?? null;
+    const appliedPrice = data?.applied_price ?? data?.appliedPrice ?? null;
 
-    const inStr = inPrice != null ? `${inPrice.toLocaleString()}원(관내)` : null;
-    const outStr = outPrice != null ? `${outPrice.toLocaleString()}원(관외)` : null;
-    const feeStr = oldFee != null ? `${oldFee.toLocaleString()}원` : null;
+    if (appliedPrice != null) {
+      return `${appliedPrice.toLocaleString()}원`;
+    }
 
-    if (inStr && outStr) return `${inStr} / ${outStr}`;
-    if (inStr) return inStr;
-    if (outStr) return outStr;
-    if (feeStr) return feeStr;
     return '-';
   };
 
@@ -58,25 +52,23 @@ const PaymentPage = () => {
       return;
     }
 
+    const paidAmount = program?.appliedPrice ?? program?.applied_price ?? 0;
+
     const enrollmentData = {
       programTitle: program?.title || '',
       location: program?.location || '',
       usagePeriod: program?.usagePeriod || '',
       classTime: classTime,
-      paidAmount: program?.inPrice ?? program?.in_price ?? 0,
+      paidAmount: paidAmount,
     };
 
-
     try {
-      const response = await enrollProgram(enrollmentData);
-      console.log('서버 응답:', response);
+      await enrollProgram(enrollmentData);
       alert('신청이 완료되었습니다.');
 
-      const regionId = program?.regionId || 1; // 기본값 1
-
+      const regionId = program?.regionId || 1;
       navigate(`/classReservation?selectedRegionId=${regionId}`);
     } catch (error) {
-      console.error('신청 실패:', error);
       alert('신청에 실패했습니다. 다시 시도해주세요.');
     }
   };

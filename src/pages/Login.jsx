@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "../styles/Login.module.css";
 import { FaUser } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
-import { login, getUserInfo, getAccessToken } from "../Api";
+import { login, getUserInfo } from "../Api";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -18,43 +18,41 @@ const Login = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    // 1. 로그인 시도
-    const response = await login(form.email, form.password);
+    try {
+      await login(form.email, form.password);
 
-    console.log("로그인 응답 전체:", response);
-    console.log("로그인 응답 accessToken:", getAccessToken());
+      const userInfo = await getUserInfo();
 
-    // 2. 로그인 성공 후 accessToken 저장됨
-    await getUserInfo();  // userInfo는 필요 없으면 무시해도 됨
+      if (userInfo?.regionId) {
+        localStorage.setItem("regionId", userInfo.regionId);
+      } else {
+        localStorage.setItem("regionId", "1");
+      }
 
-    const localRegionId = Number(localStorage.getItem("selectedRegionId")) || 1; // 기본 1(중구)
+      alert("로그인 성공!");
 
-    alert("로그인 성공!");
+      const localRegionId = Number(localStorage.getItem("regionId")) || 1; // 기본 1(중구)
 
-    const regionMap = {
-      1: "jung",
-      2: "seongdong",
-      3: "songpa",
-    };
+      const regionMap = {
+        1: "jung",
+        2: "seongdong",
+        3: "songpa",
+      };
 
-    const regionPath = regionMap[localRegionId] || "jung";
+      const regionPath = regionMap[localRegionId] || "jung";
 
-    navigate(`/${regionPath}`);
-  } catch (error) {
-    console.error("로그인 실패:", error.response?.data || error.message);
-    alert(
-      error.response?.data?.message ||
-      "로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요."
-    );
-  }
-};
-
-
-
+      navigate(`/${regionPath}`);
+    } catch (error) {
+      console.error("로그인 실패:", error.response?.data || error.message);
+      alert(
+        error.response?.data?.message ||
+        "로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요."
+      );
+    }
+  };
 
   return (
     <div className={styles.container}>

@@ -9,7 +9,7 @@ export const setAccessToken = (token) => {
 
 export const getAccessToken = () => {
   const token = localStorage.getItem("accessToken");
-  return token ? `Bearer ${token}` : null; // 항상 'Bearer ' 포함된 형태로 반환
+  return token ? `Bearer ${token}` : null;
 };
 
 export const setRefreshToken = (token) => {
@@ -31,7 +31,7 @@ const apiClient = axios.create({
 // 요청 인터셉터 - 모든 요청에 accessToken 자동 포함
 apiClient.interceptors.request.use(
   (config) => {
-    const token = getAccessToken(); // 이미 Bearer 붙은 형태
+    const token = getAccessToken();
     if (token) {
       config.headers.Authorization = token;
     }
@@ -56,7 +56,7 @@ apiClient.interceptors.response.use(
           { refreshToken },
           {
             headers: {
-              accessToken: localStorage.getItem("accessToken"), // 여긴 Bearer 없이 순수 토큰
+              accessToken: localStorage.getItem("accessToken"),
             },
           }
         );
@@ -137,7 +137,18 @@ export const changePassword = async ({ currentPassword, newPassword, confirmNewP
 
 // 비밀번호 확인
 export const verifyPassword = async (password) => {
-  const response = await apiClient.post(`/api/users/verify-password`, { password });
+  const token = localStorage.getItem("accessToken");
+
+  const response = await axios.post(
+    `${BASE_URL}/api/users/verify-password`,
+    { password },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
   return response.data;
 };
 
@@ -199,7 +210,7 @@ export const cancelRentalApplication = async (applicationId) => {
 export const getMyEnrollments = async () => {
   try {
     const response = await apiClient.get('/api/enrollments/me');
-    return response.data; // 배열로 들어옴
+    return response.data; 
   } catch (error) {
     console.error('내 수강신청 목록 조회 실패:', error);
     return [];
@@ -249,7 +260,7 @@ export const getProgramsByRegion = async (regionId) => {
 // 수강신청 상세화면
 export const getProgramDetail = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/programs/${id}`);
+    const response = await apiClient.get(`/api/programs/${id}`);
     return response.data;
   } catch (error) {
     console.error('프로그램 상세 조회 실패:', error);

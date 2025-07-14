@@ -26,7 +26,7 @@ const Classes = () => {
           let statusText = '';
           switch (e.status) {
             case 'enrolled':
-              statusText = '수강중';
+              statusText = '신청완료';
               break;
             case 'cancelled':
               statusText = '취소';
@@ -49,6 +49,7 @@ const Classes = () => {
             applyDate: e.enrolledAt?.split('T')[0].replace(/-/g, '.') || '-',
             price: e.paidAmount ? `${e.paidAmount.toLocaleString()}원` : '-',
             cancelAvailable: e.status === 'enrolled' ? '가능' : '불가',
+            inOrOut: e.regionLabel || '-', 
           };
         })
       );
@@ -61,7 +62,7 @@ const Classes = () => {
 
   const getStatusClass = (status) => {
     switch (status) {
-      case '수강중':
+      case '신청완료':
         return 'status-badge active';
       case '취소':
         return 'status-badge cancelled';
@@ -132,9 +133,9 @@ const Classes = () => {
             <thead>
               <tr>
                 <th>기간</th>
-                <th>강좌명</th>
-                <th>요일/시간</th>
-                <th>시설명</th>
+                <th>강의</th>
+                <th>강의시간</th>
+                <th>시설</th>
                 <th>강사명</th>
                 <th>상태</th>
               </tr>
@@ -142,7 +143,7 @@ const Classes = () => {
             <tbody>
               {sortedRows.map((row, idx) => (
                 <React.Fragment key={idx}>
-                  <tr className="clickable-row" onClick={() => row.status === '수강중' && toggleRow(idx)}>
+                  <tr className="clickable-row" onClick={() => row.status === '신청완료' && toggleRow(idx)}>
                     <td align="center">{row.period}</td>
                     <td align="center">{row.title}</td>
                     <td align="center">{row.schedule}</td>
@@ -152,7 +153,7 @@ const Classes = () => {
                       <div className={getStatusClass(row.status)}>{row.status}</div>
                     </td>
                   </tr>
-                  {expandedRowIndex === idx && row.status === '수강중' && (
+                  {expandedRowIndex === idx && row.status === '신청완료' && (
                     <>
                       <tr className="detail-row">
                         <td align="center" className="mini-title">신청일</td>
