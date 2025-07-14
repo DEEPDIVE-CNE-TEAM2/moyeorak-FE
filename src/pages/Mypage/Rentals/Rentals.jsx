@@ -23,12 +23,6 @@ const Rentals = () => {
     fetchRentals();
   }, []);
 
-  const sortedRows = [...rentalRows].sort((a, b) => {
-    const aDate = new Date(a.requestedDate);
-    const bDate = new Date(b.requestedDate);
-    return sortOrder === 'desc' ? bDate - aDate : aDate - bDate;
-  });
-
   const getStatusClass = (statusLabel) => {
     switch (statusLabel) {
       case '사용중':
@@ -43,6 +37,12 @@ const Rentals = () => {
         return 'status-badge';
     }
   };
+
+  const sortedRows = [...rentalRows].sort((a, b) => {
+    const aDate = new Date(a.requestedDate);
+    const bDate = new Date(b.requestedDate);
+    return sortOrder === 'desc' ? bDate - aDate : aDate - bDate;
+  });
 
   const toggleRow = (index) => {
     if (expandedRowIndex === index) {

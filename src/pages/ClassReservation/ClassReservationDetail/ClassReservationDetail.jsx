@@ -12,10 +12,17 @@ const ClassReservationDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 시간 포맷 함수
+  const formatTime = (timeStr) => {
+    if (!timeStr) return null;
+    return timeStr.length >= 5 ? timeStr.slice(0, 5) : timeStr;
+  };
+
   useEffect(() => {
     setLoading(true);
     getProgramDetail(id)
       .then((res) => {
+        console.log('프로그램 상세 데이터:', res);
         setData(res);
         setError(null);
       })
@@ -25,6 +32,24 @@ const ClassReservationDetail = () => {
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  // 강의기간 + 시간 문자열 생성 (시간값 콘솔 출력)
+  const usageStart = data?.usage_start_date || data?.usageStartDate;
+  const usageEnd = data?.usage_end_date || data?.usageEndDate;
+
+  const classTime =
+    data?.classTime
+      ? data.classTime
+      : (formatTime(data?.class_start_time) && formatTime(data?.class_end_time))
+      ? `${formatTime(data.class_start_time)} ~ ${formatTime(data.class_end_time)}`
+      : null;
+
+  console.log('classTime:', classTime);
+
+  const usagePeriodWithTime =
+    usageStart && usageEnd
+      ? `${usageStart} ~ ${usageEnd}${classTime ? ` (${classTime})` : ''}`
+      : data?.usagePeriod || '-';
 
   const infoLabels = ['대상', '장소', '강의기간', '접수기간', '취소기간', '요금', '정원', '문의'];
 
@@ -50,7 +75,7 @@ const ClassReservationDetail = () => {
     ? [
         data.target || '-',
         data.location || '-',
-        data.usagePeriod || '-',
+        usagePeriodWithTime,
         data.registrationPeriod || '-',
         data.cancelEndDate || '-',
         feeString,

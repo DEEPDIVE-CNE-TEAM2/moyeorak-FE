@@ -26,9 +26,13 @@ const ClassReservation = () => {
     const fetchPrograms = async () => {
       try {
         const programs = await getProgramsByRegion(regionId);
+        // console.log("API 응답 데이터:", programs);  // 삭제
+
         const today = new Date();
 
         const formattedData = programs.map((program) => {
+          // console.log("프로그램 수강료 확인", program.id, program.in_price, program.out_price, program.fee); // 삭제
+
           const inPrice = program.in_price ?? program.inPrice ?? null;
           const outPrice = program.out_price ?? program.outPrice ?? null;
           const oldFee = program.fee ?? null;
@@ -58,23 +62,13 @@ const ClassReservation = () => {
             }
           }
 
-          // 강의기간 + 시간 정보 포맷팅
-          const usageStart = program.usage_start_date || program.usageStartDate;
-          const usageEnd = program.usage_end_date || program.usageEndDate;
-          const classTime = program.classTime || `${program.class_start_time?.slice(0, 5)} ~ ${program.class_end_time?.slice(0, 5)}`;
-
-          const usagePeriodWithTime =
-            usageStart && usageEnd
-              ? `${usageStart} ~ ${usageEnd}${classTime ? ` (${classTime})` : ""}`
-              : program.usagePeriod || "-";
-
           return {
             id: program.id,
             imageUrl: program.imageUrl || program.image_url || "",
             title: program.title,
             details: [
               program.registrationPeriod || "-",
-              usagePeriodWithTime,
+              program.usagePeriod || "-",
               feeStr,
               program.target || "-",
             ],
